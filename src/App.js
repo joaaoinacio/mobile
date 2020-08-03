@@ -18,22 +18,13 @@ import Lancamentos from "./screens/Relatorios/Lancamentos";
 const JornadaStack = createStackNavigator(
   {
     JornadaMenu:  { 
-      screen: JornadaMenu,
-      navigationOptions: {
-        gesturesEnabled: false,
-      } 
+      screen: JornadaMenu
     },
     JornadaMenuMore:  { 
-      screen: JornadaMenuMore,
-      navigationOptions: {
-        gesturesEnabled: false,
-      } 
+      screen: JornadaMenuMore
     },
     JornadaLancamento:  { 
-      screen: JornadaLancamento,
-      navigationOptions: {
-        gesturesEnabled: false,
-      } 
+      screen: JornadaLancamento
     }
   },
   {
@@ -46,10 +37,7 @@ const JornadaStack = createStackNavigator(
 const RelatoriosStack = createStackNavigator(
   {
     Lancamentos:  { 
-      screen: Lancamentos,
-      navigationOptions: {
-        gesturesEnabled: false,
-      } 
+      screen: Lancamentos
     }
   },
   {
@@ -64,22 +52,18 @@ const AppNavigator = createDrawerNavigator(
   {
     // Stack: { screen: Stack},      
     Home:  {
-      screen: Home, 
-      navigationOptions: { 
-        gesturesEnabled: false 
-      }
+      screen: Home
     },
     Jornada: {
       screen: JornadaStack
     },
-    Lancamentos: {
-      screen: RelatoriosStack
+    Lancamentos:  { 
+      screen: Lancamentos
     },
     Login:  { 
       screen: Login, 
       navigationOptions: { 
-        drawerLockMode: 'locked-closed', 
-        gesturesEnabled: false 
+        drawerLockMode: 'locked-closed'
       } 
     }           
   },

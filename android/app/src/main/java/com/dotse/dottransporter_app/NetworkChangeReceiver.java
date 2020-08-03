@@ -1,4 +1,4 @@
-package com.dottransporter_app;
+package com.dotse.dottransporter_app;
 
 import android.app.ActivityManager;
 import android.content.BroadcastReceiver;

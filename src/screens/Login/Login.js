@@ -143,9 +143,9 @@ login () {
                       }}
                     />                  
                   </Item>
-                  <View style={{display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end', marginTop: 10}}>
+                  {/* <View style={{display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end', marginTop: 10}}>
                     <Text onPress={()=> this.setState({passwordRecoveryModal: true})}>Esqueci minha senha</Text>
-                  </View>
+                  </View> */}
                   <Item style={ styles.ItemButton }>
                     <Button style={styles.button} onPress={() => { this.login() }}>
                       <Text style={styles.buttonText}>ENTRAR</Text>
@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
     loginContainer: {     
       justifyContent: 'center', 
       alignItems: 'center',
-      backgroundColor: 'rgba(255, 255, 255, 0.3)',
+      backgroundColor: 'rgba(255, 255, 255, 0.5)',
       borderRadius: 7, 
       margin: Dimensions.get('window').width*0.08 ,
       paddingRight: 14,

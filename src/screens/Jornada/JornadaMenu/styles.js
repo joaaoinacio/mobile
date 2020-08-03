@@ -29,13 +29,12 @@ export const styles = {
         shadowRadius: 10,
     },
     image: {
-        width: Dimensions.get('window').height*0.33 - 35 - 35, 
-        height: Dimensions.get('window').height*0.33 - 35 - 35 ,
-        resizeMode: 'center'
-
+        width: Dimensions.get('window').height*0.33 - 120, 
+        height: Dimensions.get('window').height*0.33 - 120,
+        marginBottom: 10
     },
     text: {
-        fontSize: 14,
+        fontSize: 15,
         color: 'white'
     },
     logo: {

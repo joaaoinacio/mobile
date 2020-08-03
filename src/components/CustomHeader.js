@@ -10,8 +10,8 @@ export default function CustomHeader({
     back
 }) {
     return (     
-        <Header androidStatusBarColor={colors.primary.main} iosBarStyle={Platform.OS === 'ios' ? "dark-content" : "light-content"}>
-            <StatusBar backgroundColor={colors.primary.main} barStyle={Platform.OS === 'ios' ? "dark-content" : "light-content"} />
+        <Header androidStatusBarColor={colors.primary.main}  iosBarStyle="light-content">
+            <StatusBar backgroundColor={colors.primary.main} barStyle="light-content" />
             <Left style={{flex: 0.2}}>
                 {
                     back ?

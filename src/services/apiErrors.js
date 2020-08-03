@@ -1,5 +1,6 @@
 import { Toast } from 'native-base';
 import NavigationService from '../NavigationService';
+import AuthController from '../controllers/AuthController';
 
 const errors = [
     {
@@ -62,6 +63,6 @@ export default function apiErros(error){
         type: 'danger',
         duration: 3000
     })
-    if(status === 401) NavigationService.navigate('Login');
+    if(status === 401) AuthController.loggout();
     return errors[status_message_pos]
 }

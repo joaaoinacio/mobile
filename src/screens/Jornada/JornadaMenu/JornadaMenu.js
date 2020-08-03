@@ -16,7 +16,7 @@ function MenuItem({
 }){
   return(
     <TouchableOpacity activeOpacity={0.7} style={styles.card} onPress={() => navigation.navigate('JornadaLancamento', {descricao: descricao, id: id})}>
-      <Image source={{uri: icone}} style={styles.image}/>
+      <Image source={{uri: icone}} style={styles.image} resizeMode="contain"/>
       <Text style={styles.text}>
         {descricao}
       </Text>

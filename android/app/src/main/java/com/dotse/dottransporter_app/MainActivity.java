@@ -1,4 +1,4 @@
-package com.dottransporter_app;
+package com.dotse.dottransporter_app;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;

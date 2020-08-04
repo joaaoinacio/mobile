@@ -1,6 +1,6 @@
-import { Body, Button, Col, Container, Content, Grid, Icon, Left, List, ListItem, Text, View } from "native-base";
+import { Body, Button, Col, Container, Content, Grid, Icon, Left, List, ListItem, Text, View, Row } from "native-base";
 import React, { Component } from "react";
-import { Dimensions, Image, Linking, ImageBackground } from "react-native";
+import { Dimensions, Image, Linking, ImageBackground, Alert } from "react-native";
 import AuthController from "../../controllers/AuthController";
 import { colors } from "../../theme/colors";
 import Routes, { images } from './routes';
@@ -10,8 +10,22 @@ import { connect } from 'react-redux';
 
 function SideBar(props) {
 
-  function Logout(){
-    AuthController.loggout()
+  function Logout() {
+    Alert.alert(
+      "Você tem certeza que deseja sair da sua conta?",
+      "",
+      [
+        {
+          text: "Cancelar",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel"
+        },
+        { text: "Sair", onPress: () => AuthController.loggout() }
+      ],
+      { cancelable: false }
+    );
+
+    
   };
 
   return (
@@ -65,7 +79,7 @@ function SideBar(props) {
                     } : { backgroundColor: 'transparent' }}
                 >
                   <Left style={{ width: 40 }}>
-                    <Image source={data.image} style={{ width: 30, height: 30 }} resizeMode="contain"/>
+                    <Image source={data.image} style={{ width: 30, height: 30 }} resizeMode="contain" />
                     <Text style={styles.text}>
                       {data.name}
                     </Text>
@@ -73,50 +87,58 @@ function SideBar(props) {
                 </ListItem>
               )
             })}
-            <ListItem
-              button
-              noBorder
-              onPress={Logout}
-              style={{ backgroundColor: 'transparent' }}
-            >
-              <Left>
-                <View style={{ width: 30, height: 30 }}>
-                  <Icon
-                    name={"close"}
-                    type="MaterialIcons"
-                    style={{ color: 'white', fontSize: 30 }}
-                  />
-                </View>
-                <Text style={styles.text}>
-                  Sair
-                      </Text>
-              </Left>
-            </ListItem>
           </List>
         </Content>
         <View style={{ position: 'absolute', zIndex: 99, bottom: 0, width: '100%', alignItems: 'flex-end', justifyContent: 'flex-end', padding: 10 }}>
           <Grid>
-            <Col style={{
-              paddingLeft: 10,
-              height: 50
-            }}>
-              <Button transparent iconLeft>
-                <Icon
-                  name={"info"}
-                  type="FontAwesome"
-                  style={{ color: 'white' }}
-                />
-                <Text style={{ color: 'white' }}>Sobre</Text>
-              </Button>
-            </Col>
-            <Col style={{
-              justifyContent: 'center',
-              alignItems: 'flex-end',
-              paddingRight: 10,
-              height: 50
-            }}>
-              <Text style={{ fontSize: 10, color: '#bdbdbd' }}>Versão 1.0.0</Text>
-            </Col>
+            <Row style={{ width: '100%' }}>
+              <Col>
+                <List>
+                  <ListItem
+                    button
+                    noBorder
+                    onPress={Logout}
+                    style={{ backgroundColor: 'transparent' }}
+                  >
+                    <Left>
+                      <View style={{ width: 30, height: 30 }}>
+                        <Icon
+                          name={"close"}
+                          type="MaterialIcons"
+                          style={{ color: 'white', fontSize: 30 }}
+                        />
+                      </View>
+                      <Text style={styles.text}>
+                        Sair
+                      </Text>
+                    </Left>
+                  </ListItem>
+                </List>
+              </Col>
+            </Row>
+            <Row style={{ height: 50, width: '100%' }}>
+              <Col style={{
+                paddingLeft: 12,
+                height: 50
+              }}>
+                <Button transparent iconLeft>
+                  {/* <Icon
+                    name={"info"}
+                    type="FontAwesome"
+                    style={{ color: 'white' }}
+                  />
+                  <Text style={{ color: 'white' }}>Sobre</Text> */}
+                </Button>
+              </Col>
+              <Col style={{
+                justifyContent: 'center',
+                alignItems: 'flex-end',
+                paddingRight: 10,
+                height: 50
+              }}>
+                <Text style={{ fontSize: 10, color: '#bdbdbd' }}>Versão 1.0.0</Text>
+              </Col>
+            </Row>
           </Grid>
         </View>
       </ImageBackground>

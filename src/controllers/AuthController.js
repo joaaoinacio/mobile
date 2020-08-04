@@ -8,6 +8,8 @@ import { isEmpty } from 'lodash';
 import {Store} from '../store';
 import { setUser } from '../store/actions';
 import Database from '../database';
+import SecuryStorageController from './SecuryStorageController';
+import ConnectionController from './ConnectionController';
 
 
 export default class AuthController {
@@ -32,7 +34,9 @@ export default class AuthController {
                     reject('Network Error!')
                 }
 
-                AuthController.setPersistences(response.data).then((res) => {
+                AuthController.setPersistences(response.data).then(async (res) => {
+                    await SecuryStorageController.store(user)
+                    await AsyncStorage.setItem('logged', 'true'); 
                     resolve(response)
                 })
                 .catch(err => {
@@ -66,11 +70,38 @@ export default class AuthController {
         })
     }
 
+    static async oneTapLogin(){
+        try{
+            const is_connect = await ConnectionController.isConnected()
+            const credentials = await SecuryStorageController.get()
+
+            if(is_connect){
+                await AuthController.index(credentials)
+            }
+
+            const token = await AuthController.getToken();
+            const user  = await AuthController.getUser();
+
+            if(!isEmpty(token) && !isEmpty(user)){
+                await AsyncStorage.setItem('logged', 'true'); 
+                return Promise.resolve('ok')
+            }
+
+            return Promise.reject('no data')
+            
+        }
+        catch(err){
+            return Promise.reject(err)
+        }
+    }
+
     static async isLogged(){
         try {
             const token = await AuthController.getToken();
             const user  = await AuthController.getUser();
-            if(!isEmpty(token) && !isEmpty(user)){
+            const logged  = await AsyncStorage.getItem('logged');
+
+            if(!isEmpty(token) && !isEmpty(user) && logged === 'true'){
                 Axios.defaults.headers.common['Authorization'] = token
                 return Promise.resolve(true)
             }
@@ -87,14 +118,25 @@ export default class AuthController {
 
     static async loggout(){
         try {
-            await AuthController.removeToken();
-            await AuthController.removeUser();
+            await AsyncStorage.setItem('logged', 'false');  
             NavigationService.navigate('Login');
-            AuthController.dropDatabases()
             
             Promise.resolve('bye')
         } catch (error) {
             Promise.reject(error)
+        }
+    }
+
+    static async cleanUserData(){
+        try{
+            await AsyncStorage.setItem('logged', 'false');  
+            await AuthController.removeToken();
+            await AuthController.removeUser();
+            AuthController.dropDatabases()
+            Promise.resolve('bye')
+        }
+        catch(err){
+            Promise.reject(err)
         }
     }
     
@@ -171,7 +213,7 @@ export default class AuthController {
 
     static async removeToken(){
         try {
-            await AAsyncStorage.removeItem('token');
+            await AsyncStorage.removeItem('token');
             Promise.resolve('removed')
         } catch (error) {
             Promise.reject(error)

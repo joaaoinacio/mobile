@@ -136,7 +136,7 @@ function SideBar(props) {
                 paddingRight: 10,
                 height: 50
               }}>
-                <Text style={{ fontSize: 10, color: '#bdbdbd' }}>Versão 1.0.1</Text>
+                <Text style={{ fontSize: 10, color: '#bdbdbd' }}>Versão 1.0.2</Text>
               </Col>
             </Row>
           </Grid>

@@ -1,6 +1,7 @@
 import { Toast } from 'native-base';
 import NavigationService from '../NavigationService';
 import AuthController from '../controllers/AuthController';
+import ConnectionController from '../controllers/ConnectionController';
 
 const errors = [
     {
@@ -49,9 +50,14 @@ export function voidError(){
     }
 }
 
-export default function apiErros(error){
+export default async function apiErros(error){
+    
+    const is_connected = await ConnectionController.isConnected()
 
-    console.log('api error', error)
+    if(!is_connected) return {
+        error: "Network Error!!!",
+        status: 666
+    }
 
     if(!error) return voidError()
     if(!error.status) return voidError()

@@ -46,11 +46,13 @@ const LancamentoItem = ({ item, index, lancamentos }) => {
                 </ListItem>
                 <View style={styles.listItem}>
                     <View style={{ width: '90%' }}>
-                        <Text>
-                            <Text style={styles.dateText}>{moment(item.data).format('hh:mm A')}</Text>
-                            {"   "}
-                            {item.descricao}
-                        </Text>
+                        <View style={{ width: '80%' }}>
+                            <Text>
+                                <Text style={styles.dateText}>{moment(item.data).format('hh:mm A')}</Text>
+                                {"   "}
+                                {item.descricao}
+                            </Text>
+                        </View>
                         <View style={{ position: 'absolute', right: 0, bottom: 0 }}>
                             <TouchableOpacity onPress={showObs}>
                                 <Text style={{ color: colors.secondary.main, fontSize: 12 }}>Ver obs.</Text>
@@ -69,11 +71,13 @@ const LancamentoItem = ({ item, index, lancamentos }) => {
     return (
         <View style={styles.listItem}>
             <View style={{ width: '90%' }}>
-                <Text>
-                    <Text style={styles.dateText}>{moment(item.data).format('hh:mm A')}</Text>
-                    {"   "}
-                    {item.descricao}
-                </Text>
+                <View style={{ width: '80%' }}>
+                    <Text>
+                        <Text style={styles.dateText}>{moment(item.data).format('hh:mm A')}</Text>
+                        {"   "}
+                        {item.descricao}
+                    </Text>
+                </View>
                 <View style={{ position: 'absolute', right: 0, bottom: 0 }}>
                     <TouchableOpacity onPress={showObs}>
                         <Text style={{ color: colors.secondary.main, fontSize: 12 }}>Ver obs.</Text>

@@ -1,4 +1,4 @@
-import { Container, Text, Content, Button} from 'native-base';
+import { Container, Text, Content, Button, Toast} from 'native-base';
 import React from 'react';
 import CustomHeader from '../../../components/CustomHeader';
 import { styles, images } from './styles';
@@ -6,6 +6,7 @@ import JornadaController from '../../../controllers/JornadaController';
 import { connect } from 'react-redux';
 import {TouchableOpacity, View, Image, FlatList, BackHandler } from 'react-native';
 import {isEmpty} from 'lodash';
+import ConnectionController from '../../../controllers/ConnectionController';
 
 
 function MenuItem({
@@ -50,7 +51,8 @@ function JornadaMenu(props) {
       props.navigation.addListener("didFocus", () => {     
         BackHandler.addEventListener('hardwareBackPress', backPress);
       });   
-      JornadaController.index()  
+      JornadaController.index()
+      checkConnetion()  
     }, []);
 
     const renderItem = ({item, index}) => {
@@ -67,6 +69,22 @@ function JornadaMenu(props) {
         </View>
       ) 
     }
+
+    async function checkConnetion(){
+      try{
+        const is_connected = await ConnectionController.isConnected()
+        if(!is_connected){
+          Toast.show({
+            text: 'Você esta usando o APP sem conexão com a internet.',
+            type: 'warning',
+            buttonText: 'ok'
+          })
+        }
+      }
+      catch(err){
+        console.log(err)
+      }
+    } 
 
 
     const backPress = () => {

@@ -16,6 +16,9 @@ export default function CustomCheckBox(props) {
                 disabled={false}
                 value={checked}
                 onValueChange={(checked) => onValueChange(checked)}
+                tintColor={colors.primary.main}
+                onTintColor={colors.primary.main}
+                onCheckColor={colors.primary.main}
                 tintColors={{
                     true: colors.primary.main
                 }}

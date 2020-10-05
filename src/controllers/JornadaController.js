@@ -10,6 +10,7 @@ import Axios from 'axios';
 import moment from 'moment';
 import { Toast } from 'native-base';
 import ErrorHandle from './ErrorHandle';
+import { sleep } from '../functions/util';
 
 
 export default class JornadaController {
@@ -75,6 +76,7 @@ export default class JornadaController {
             await DB.close()
             //SEND DATA TO SERVER
             if(isConnected) await JornadaController.syncLancamentosEnviar()
+            else await sleep(2000)
             //RESOLVE DATA
             return Promise.resolve(dbData)
         }

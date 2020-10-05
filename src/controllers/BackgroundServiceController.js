@@ -1,4 +1,3 @@
-// import BackgroundFetch from "react-native-background-fetch";
 // import JornadaController from "./JornadaController";
 // ;
 

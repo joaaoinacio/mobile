@@ -1,13 +1,11 @@
-import React from "react";
-import Setup from "./src/boot/setup";
-import SplashScreen from 'react-native-splash-screen'
+import React from 'react';
+import Setup from './src/boot/setup';
+import SplashScreen from 'react-native-splash-screen';
 
 console.disableYellowBox = true;
 
 export default class App extends React.Component {
-
-
-  componentDidMount() { 
+  async componentDidMount() {
     SplashScreen.hide();
   }
   render() {

@@ -1,103 +1,101 @@
-import { Root } from "native-base";
-import React from "react";
-import { createAppContainer, createDrawerNavigator, createStackNavigator } from "react-navigation";
-import { Provider } from 'react-redux';
-import AuthController from "./controllers/AuthController";
+import {Root} from 'native-base';
+import React from 'react';
+import {
+  createAppContainer,
+  createDrawerNavigator,
+  createStackNavigator,
+} from 'react-navigation';
+import {Provider} from 'react-redux';
+import AuthController from './controllers/AuthController';
 import NavigationService from './NavigationService';
-import Login from "./screens/Login";
-import SideBar from "./screens/Sidebar";
-import { Store } from './store';
-import Home from "./screens/Home";
-import JornadaMenu from "./screens/Jornada/JornadaMenu";
-import JornadaMenuMore from "./screens/Jornada/JornadaMenuMore";
-import JornadaLancamento from "./screens/Jornada/JornadaLancamento";
-import Lancamentos from "./screens/Relatorios/Lancamentos";
-
-
+import Login from './screens/Login';
+import SideBar from './screens/Sidebar';
+import {Store} from './store';
+import Home from './screens/Home';
+import JornadaMenu from './screens/Jornada/JornadaMenu';
+import JornadaMenuMore from './screens/Jornada/JornadaMenuMore';
+import JornadaLancamento from './screens/Jornada/JornadaLancamento';
+import Lancamentos from './screens/Relatorios/Lancamentos';
 
 const JornadaStack = createStackNavigator(
   {
-    JornadaMenu:  { 
-      screen: JornadaMenu
+    JornadaMenu: {
+      screen: JornadaMenu,
     },
-    JornadaMenuMore:  { 
-      screen: JornadaMenuMore
+    JornadaMenuMore: {
+      screen: JornadaMenuMore,
     },
-    JornadaLancamento:  { 
-      screen: JornadaLancamento
-    }
+    JornadaLancamento: {
+      screen: JornadaLancamento,
+    },
   },
   {
-    initialRouteName: "JornadaMenu",
-    headerMode: "none"    
-  }
+    initialRouteName: 'JornadaMenu',
+    headerMode: 'none',
+  },
 );
-
 
 const RelatoriosStack = createStackNavigator(
   {
-    Lancamentos:  { 
-      screen: Lancamentos
-    }
+    Lancamentos: {
+      screen: Lancamentos,
+    },
   },
   {
-    initialRouteName: "Lancamentos",
-    headerMode: "none"    
-  }
+    initialRouteName: 'Lancamentos',
+    headerMode: 'none',
+  },
 );
-
-
 
 const AppNavigator = createDrawerNavigator(
   {
-    // Stack: { screen: Stack},      
-    Home:  {
-      screen: Home
+    // Stack: { screen: Stack},
+    Home: {
+      screen: Home,
     },
     Jornada: {
-      screen: JornadaStack
+      screen: JornadaStack,
     },
-    Lancamentos:  { 
-      screen: Lancamentos
+    Lancamentos: {
+      screen: Lancamentos,
     },
-    Login:  { 
-      screen: Login, 
-      navigationOptions: { 
-        drawerLockMode: 'locked-closed'
-      } 
-    }           
+    Login: {
+      screen: Login,
+      navigationOptions: {
+        drawerLockMode: 'locked-closed',
+      },
+    },
   },
-  {   
-    initialRouteName: "Home",
-    unmountInactiveRoutes: true, 
-    contentComponent: props => <SideBar {...props}/>
-  }
+  {
+    initialRouteName: 'Home',
+    unmountInactiveRoutes: true,
+    contentComponent: props => <SideBar {...props} />,
+  },
 );
-
 
 const AppContainer = createAppContainer(AppNavigator);
 
 export default class App extends React.PureComponent {
-  constructor(props){
-    super(props);  
-    this.state = {     
-      user: ''
+  constructor(props) {
+    super(props);
+    this.state = {
+      user: '',
     };
   }
 
-  componentDidMount(){
-    AuthController.getUser().then((res) => this.setState({user: res}))
+  componentDidMount() {
+    AuthController.getUser().then(res => this.setState({user: res}));
   }
 
   render() {
     return (
       <Provider store={Store}>
         <Root>
-          <AppContainer 
+          <AppContainer
             ref={navigatorRef => {
               NavigationService.setTopLevelNavigator(navigatorRef);
             }}
-            screenProps={{ user: this.state.user }}
+            screenProps={{user: this.state.user}}
           />
         </Root>
       </Provider>

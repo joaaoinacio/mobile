@@ -23,21 +23,16 @@ function Home(props) {
           return;
         }
         hasToken(true);
-        console.log('AQUI 1 ->>', props);
         BootController.index()
           .then(res => {
-            console.log('AQUI 2 ->>', res);
             props.navigation.navigate('Jornada');
           })
           .catch(err => {
-            console.log('AQUI 3 ->>', err);
             ErrorHandle.store(err);
             props.navigation.navigate('Jornada');
           });
       })
-      .catch(err => {
-        console.log('AQUI 4 ->>', err);
-      });
+      .catch(err => {});
   }, []);
 
   if (!token) {
@@ -58,7 +53,7 @@ function Home(props) {
 }
 
 const mapStateToProps = store => ({
-  bootList: store.bootList.bootList
+  bootList: store.bootList.bootList,
 });
 
 const mapDispatchToProps = dispatch =>
@@ -66,5 +61,5 @@ const mapDispatchToProps = dispatch =>
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(Home);

@@ -115,7 +115,6 @@ class BootController {
 
       if (hasInternet) {
         const userLogs = await AsyncStorage.getItem('userLogs');
-        console.log('AQUI ->>', JSON.parse(userLogs));
         if (userLogs) {
           await http.post(Routes.api + '/user-logs', {
             logs: JSON.parse(userLogs),

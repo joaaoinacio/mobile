@@ -1,22 +1,20 @@
 import React from 'react';
-import { Text, Button } from 'native-base';
-import { styles } from './styles';
+import {Text, Button} from 'native-base';
+import {styles} from './styles';
+import withPreventDoubleClick from '../../validation/withPreventDoubleClick';
 
-export default ({
-    text,
-    type,
-    ...props
-}) => {
-    if(type === 'cancel')
-        return(
-            <Button style={styles.cancelButton} {...props}>
-                <Text>{text}</Text>
-            </Button>
-        )
+export default ({text, type, ...props}) => {
+  const NewButton = withPreventDoubleClick(Button);
+  if (type === 'cancel') {
     return (
-        <Button style={styles.root} {...props}>
-            <Text>{text}</Text>
-        </Button>
+      <NewButton style={styles.cancelButton} {...props}>
+        <Text>{text}</Text>
+      </NewButton>
     );
-  
-}
+  }
+  return (
+    <NewButton style={styles.root} {...props}>
+      <Text>{text}</Text>
+    </NewButton>
+  );
+};

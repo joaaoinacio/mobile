@@ -24,12 +24,13 @@ class ConnectionController{
     static connectionType(){
         return new Promise(function(resolve, reject) { 
 
-            NetInfo.getConnectionInfo().then((connectionInfo) => {
-                resolve(connectionInfo)
+            NetInfo.fetch().then((connectionInfo) => {
+                resolve(connectionInfo.type)
             })
             .catch(err => reject(err));
         })
     }
+
 
     static connectionListener(){
         NetInfo.addEventListener('connectionChange', (connectionInfo) => {

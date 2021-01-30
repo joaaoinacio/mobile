@@ -1,8 +1,8 @@
 import PermissionController from './PermissionController';
 import JornadaController from './JornadaController';
 import GeolocationController from './GeolocationController';
-import {setBootList} from '../store/actions';
-import {Store} from '../store';
+import { setBootList } from '../store/actions';
+import { Store } from '../store';
 import BackgroundServiceController from './BackgroundServiceController';
 import moment from 'moment';
 import AuthController from './AuthController';
@@ -12,6 +12,7 @@ import ConnectionController from './ConnectionController';
 import AsyncStorage from '@react-native-community/async-storage';
 import http from '../services/api';
 import Routes from '../services/routes';
+import SyncWifiController from './ConfigController/SyncWifiController';
 
 class BootController {
   static async index() {
@@ -111,9 +112,10 @@ class BootController {
       await JornadaController.syncLancamentosEnviar(true);
       await ErrorHandle.sync();
 
-      const hasInternet = ConnectionController.isConnected();
+      const hasInternet = await ConnectionController.isConnected();
+      const checkSyncWifi = await SyncWifiController.check()
 
-      if (hasInternet) {
+      if (hasInternet && checkSyncWifi) {
         const userLogs = await AsyncStorage.getItem('userLogs');
         if (userLogs) {
           await http.post(Routes.api + '/user-logs', {
@@ -126,7 +128,7 @@ class BootController {
       const init = await AuthController.getInitConfg();
       if (init && init.sync) {
         await JornadaController.syncLancamentosApi();
-        await AuthController.setInitConfg({sync: false});
+        await AuthController.setInitConfg({ sync: false });
       }
       return Promise.resolve('ok');
     } catch (err) {
@@ -162,7 +164,7 @@ class BootController {
           ],
         }),
       );
-      Date.prototype.toJSON = function() {
+      Date.prototype.toJSON = function () {
         return moment(this).format();
       };
 

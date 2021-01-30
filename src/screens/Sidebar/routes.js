@@ -15,6 +15,11 @@ const Routes = [
       name: "Lancamentos",
       route: "Lancamentos",
       image: images.lancamento
+    },
+    {
+      name: "Configurações",
+      route: "Config",
+      icon: { type: 'Ionicons', name: 'settings' }
     }
   ];
 

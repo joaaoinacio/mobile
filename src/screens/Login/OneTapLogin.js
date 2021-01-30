@@ -1,16 +1,7 @@
-import { isEmpty, isNull, isUndefined } from 'lodash';
-import { Button, Container, Content, Form, Icon, Input, Item, Text, Toast, Grid, ListItem, Body } from 'native-base';
-import React, { Component } from 'react';
-import { BackHandler, Dimensions, Image, ImageBackground, Platform, StatusBar, StyleSheet, View, TouchableOpacity } from 'react-native';
-import Loader from '../../components/Loader';
-import AuthController from '../../controllers/AuthController';
+import { Button, Icon, Text } from 'native-base';
+import React from 'react';
+import { Dimensions, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { colors } from '../../theme/colors';
-import PasswordRecovery from './PasswordRecovery';
-import { images } from './styles';
-import CheckBox from '@react-native-community/checkbox';
-import CustomCheckBox from '../../components/CustomCheckBox';
-import AsyncStorage from '@react-native-community/async-storage';
-import SecuryStorageController from '../../controllers/SecuryStorageController';
 
 
 export default function OneTapLogin(props) {

@@ -25,7 +25,7 @@ function SideBar(props) {
       { cancelable: false }
     );
 
-    
+
   };
 
   return (
@@ -79,7 +79,10 @@ function SideBar(props) {
                     } : { backgroundColor: 'transparent' }}
                 >
                   <Left style={{ width: 40 }}>
-                    <Image source={data.image} style={{ width: 30, height: 30 }} resizeMode="contain" />
+                    {data.icon ?
+                      <Icon type={data.icon.type} name={data.icon.name} style={{ fontSize: 25, width: 30, color: 'white' }} /> :
+                      <Image source={data.image} style={{ width: 30, height: 30 }} resizeMode="contain" />
+                    }
                     <Text style={styles.text}>
                       {data.name}
                     </Text>

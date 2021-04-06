@@ -1,20 +1,19 @@
-import {isEmpty} from 'lodash';
-import {Container, Text, Content, Grid, Col} from 'native-base';
-import React from 'react';
-import {FlatList, Image, TouchableOpacity, View} from 'react-native';
-import CustomHeader from '../../../components/CustomHeader';
-import {styles} from './styles';
-import CustomCard from '../../../components/CustomCard';
-import MaterialTextField from '../../../components/MaterialTextField';
-import CustomButton from '../../../components/CustomButton';
-import {connect} from 'react-redux';
 import moment from 'moment';
-import GeolocationController from '../../../controllers/GeolocationController';
-import Modal from '../../../components/Modal';
-import JornadaController from '../../../controllers/JornadaController';
+import { Col, Container, Content, Grid, Text } from 'native-base';
+import React from 'react';
+import { View } from 'react-native';
+import { connect } from 'react-redux';
+import CustomButton from '../../../components/CustomButton';
+import CustomCard from '../../../components/CustomCard';
+import CustomHeader from '../../../components/CustomHeader';
 import Loader from '../../../components/Loader';
+import MaterialTextField from '../../../components/MaterialTextField';
+import Modal from '../../../components/Modal';
+import GeolocationController from '../../../controllers/GeolocationController';
+import LancamentosJornadaController from '../../../controllers/LancamentosJornadaController';
+import { styles } from './styles';
 
-function CardContent({motorista, veiculo, data, hora}) {
+function CardContent({ motorista, veiculo, data, hora }) {
   return (
     <View>
       <Text>Motorista: {motorista}</Text>
@@ -36,6 +35,7 @@ function JornadaLancamento(props) {
 
   const [savedModal, onChangeSavedModal] = React.useState(false);
   const [errorModal, onChangeErrorModal] = React.useState(false);
+  const [disableButton, setDisableButton] = React.useState(false);
   const [loader, setLoader] = React.useState(false);
 
   const onTextFieldChange = (value, name) => {
@@ -51,18 +51,19 @@ function JornadaLancamento(props) {
 
   async function storeLancamento() {
     try {
+      setDisableButton(true);
       setLoader(true);
       let data = {
         latitude:
           props.geolocation &&
-          props.geolocation.coords &&
-          props.geolocation.coords.latitude
+            props.geolocation.coords &&
+            props.geolocation.coords.latitude
             ? props.geolocation.coords.latitude
             : 0,
         longitude:
           props.geolocation &&
-          props.geolocation.coords &&
-          props.geolocation.coords.longitude
+            props.geolocation.coords &&
+            props.geolocation.coords.longitude
             ? props.geolocation.coords.longitude
             : 0,
         data: values.full_date,
@@ -75,10 +76,10 @@ function JornadaLancamento(props) {
         user_nome: props.user && props.user.user && props.user.user.name,
         veiculo_nome:
           props.user &&
-          props.user.user &&
-          props.user.user.veiculo &&
-          props.user.user.veiculo.veiculo &&
-          props.user.user.veiculo.veiculo.placa
+            props.user.user &&
+            props.user.user.veiculo &&
+            props.user.user.veiculo.veiculo &&
+            props.user.user.veiculo.veiculo.placa
             ? props.user.user.veiculo.veiculo.placa
             : 'Sem Placa',
         veiculo_id:
@@ -93,9 +94,10 @@ function JornadaLancamento(props) {
         descricao:
           props.navigation.state.params &&
           props.navigation.state.params.descricao,
+        new: true
       };
 
-      await JornadaController.store(data);
+      await (new LancamentosJornadaController()).store({ data });
       onChangeSavedModal(true);
     } catch (err) {
       onChangeErrorModal(true);
@@ -112,6 +114,7 @@ function JornadaLancamento(props) {
 
   function onCloseErrorModal() {
     onChangeErrorModal(false);
+    props.navigation.goBack();
   }
 
   return (
@@ -137,10 +140,10 @@ function JornadaLancamento(props) {
               motorista={props.user && props.user.user && props.user.user.name}
               veiculo={
                 props.user &&
-                props.user.user &&
-                props.user.user.veiculo &&
-                props.user.user.veiculo.veiculo &&
-                props.user.user.veiculo.veiculo.placa
+                  props.user.user &&
+                  props.user.user.veiculo &&
+                  props.user.user.veiculo.veiculo &&
+                  props.user.user.veiculo.veiculo.placa
                   ? props.user.user.veiculo.veiculo.placa
                   : 'Sem Placa'
               }
@@ -159,16 +162,16 @@ function JornadaLancamento(props) {
           onChangeText={value => onTextFieldChange(value, 'obs')}
         />
 
-        <Grid style={{marginTop: 20}}>
-          <Col style={{paddingRight: 5}}>
+        <Grid style={{ marginTop: 20 }}>
+          <Col style={{ paddingRight: 5 }}>
             <CustomButton
               text="Cancelar"
               type="cancel"
               onPress={() => props.navigation.goBack()}
             />
           </Col>
-          <Col style={{paddingLeft: 5}}>
-            <CustomButton text="Salvar" onPress={storeLancamento} />
+          <Col style={{ paddingLeft: 5 }}>
+            <CustomButton text="Salvar" onPress={storeLancamento} disabled={disableButton}/>
           </Col>
         </Grid>
         <Modal

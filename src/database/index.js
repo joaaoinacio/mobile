@@ -1,6 +1,6 @@
 import Realm from 'realm';
 import JornadaMenuSchema from './Jornada/Schemas/JornadaMenuSchema';
-import {isEmpty, isUndefined} from 'lodash';
+import { isEmpty, isUndefined } from 'lodash';
 import JornadaMenuService from './Jornada/Services/JornadaMenuService';
 import JornadaLancamentosEnviarSchema from './Jornada/Schemas/JornadaLancamentosEnviarSchema';
 import JornadaLancamentosSchema from './Jornada/Schemas/JornadaLancamentosSchema';
@@ -18,23 +18,23 @@ const Services = {
     JornadaLancamentos: JornadaLancamentoService
 }
 
-class Database{
+class Database {
 
     constructor(schema) {
-        this.schema     = Schemas[schema];
-        this.realm      = null
+        this.schema = Schemas[schema];
+        this.realm = null
     }
 
-    async open(){
+    async open() {
 
-        if(isEmpty(this.schema)) return Promise.reject('Nenhum schema com esse nome encontrado no banco de dados.')
-       
-        try{
-            const realm = await Realm.open({schema: [this.schema], deleteRealmIfMigrationNeeded: true})
+        if (isEmpty(this.schema)) return Promise.reject('Nenhum schema com esse nome encontrado no banco de dados.')
+
+        try {
+            const realm = await Realm.open({ schema: [this.schema], deleteRealmIfMigrationNeeded: true })
             this.realm = realm
-            return Promise.resolve('Database is opened!')   
+            return Promise.resolve('Database is opened!')
         }
-        catch(err){
+        catch (err) {
             Toast.show({
                 text: JSON.stringify(err),
                 type: 'warning',
@@ -45,101 +45,116 @@ class Database{
         }
     }
 
-    async close(){
-        try{
+    async close() {
+        try {
             await this.realm.close()
             console.log('Database ' + this.schema.name + ' closed!')
-            return Promise.resolve('Database is closed!') 
+            return Promise.resolve('Database is closed!')
         }
-        catch(err){
+        catch (err) {
             console.log('err to close database!')
             return Promise.reject(err)
         }
     }
 
-    async index(query){
-        try{
+    async index(query) {
+        try {
             var data
-            if(!isUndefined(Services[this.schema.name]) && !isUndefined(Services[this.schema.name].index)){
+            if (!isUndefined(Services[this.schema.name]) && !isUndefined(Services[this.schema.name].index)) {
                 data = await Services[this.schema.name].index(this.realm, this.schema, query)
                 return Promise.resolve(this.formatList(data))
             }
-            else{
-                if(query) data = await this.realm.objects(this.schema.name).filtered(query ? query : 'id != null')
+            else {
+                if (query) data = await this.realm.objects(this.schema.name).filtered(query ? query : 'id != null')
                 else data = await this.realm.objects(this.schema.name)
-                return Promise.resolve(this.formatList(data)) 
-            } 
+                return Promise.resolve(this.formatList(data))
+            }
         }
-        catch(err){
+        catch (err) {
             return Promise.reject(err)
         }
     }
 
-    store(data){
+    store(data) {
         return new Promise((resolve, reject) => {
-            try{
-                if(isEmpty(data)) reject('Nenhum dado enviado para salvar.')  
-                if(!Array.isArray(data)) reject('A inserçao deve ser feita com um array de objetos.')
+            try {
+                if (isEmpty(data)) reject('Nenhum dado enviado para salvar.')
+                if (!Array.isArray(data)) reject('A inserçao deve ser feita com um array de objetos.')
 
-                
+
                 //SAVE IN SERVICE
 
-                
-                if(!isUndefined(Services[this.schema.name])){
+
+                if (!isUndefined(Services[this.schema.name])) {
 
                     Services[this.schema.name].store(this.realm, this.schema, data).then((res) => {
                         return resolve(this.formatList(res))
                     })
-                    .catch(err => {
-                        return reject(err)
-                    })
+                        .catch(err => {
+                            return reject(err)
+                        })
 
                 }
-                else{
+                else {
                     //DEFAULT SAVE
-                
+
                     this.realm.write(() => {
                         data.map(item => {
                             this.realm.create(this.schema.name, item, true);
                         })
                         return resolve(this.formatList(this.realm.objects(this.schema.name)))
-                    }); 
+                    });
 
                 }
             }
-            catch(err){
+            catch (err) {
                 console.log(err)
                 return reject(err)
             }
 
-            
-            
-        }); 
+
+
+        });
     }
 
-    delete(data){
+    delete(data) {
         return new Promise((resolve, reject) => {
-            try{
+            try {
                 this.realm.write(() => {
                     this.realm.delete(data);
                     return resolve('Done!')
                 });
             }
-            catch(err){
+            catch (err) {
                 return reject(err)
             }
         })
     }
 
-    deleteAll(){
+    deleteWhere(query) {
         return new Promise((resolve, reject) => {
-            try{
+            try {
+                this.realm.write(() => {
+                    const objects = this.realm.objects(this.schema.name).filtered(query);
+                    this.realm.delete(objects);
+                    return resolve('Done!');
+                });
+            }
+            catch (err) {
+                return reject(err)
+            }
+        })
+    }
+
+    deleteAll() {
+        return new Promise((resolve, reject) => {
+            try {
                 this.realm.write(() => {
                     this.realm.deleteAll();
                     return resolve('Done!')
                 });
             }
-            catch(err){
+            catch (err) {
                 return reject(err)
             }
         })
@@ -147,14 +162,14 @@ class Database{
 
 
 
-    formatList(data){
+    formatList(data) {
         let model = this.schema.properties
         let newData = []
         let obj = {}
 
         data.map(realmItem => {
             obj = {}
-            Object.keys(model).map(function(key, index) {
+            Object.keys(model).map(function (key, index) {
                 obj[key] = realmItem[key];
             });
             newData.push(obj)
@@ -164,7 +179,7 @@ class Database{
 
     }
 
-   
+
 
 }
 

@@ -13,6 +13,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import http from '../services/api';
 import Routes from '../services/routes';
 import SyncWifiController from './ConfigController/SyncWifiController';
+import LancamentosJornadaController from './LancamentosJornadaController';
 
 class BootController {
   static async index() {
@@ -109,7 +110,6 @@ class BootController {
         }),
       );
       await JornadaController.index();
-      await JornadaController.syncLancamentosEnviar(true);
       await ErrorHandle.sync();
 
       const hasInternet = await ConnectionController.isConnected();
@@ -127,7 +127,6 @@ class BootController {
 
       const init = await AuthController.getInitConfg();
       if (init && init.sync) {
-        await JornadaController.syncLancamentosApi();
         await AuthController.setInitConfg({ sync: false });
       }
       return Promise.resolve('ok');

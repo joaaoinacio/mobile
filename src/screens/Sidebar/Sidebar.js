@@ -6,9 +6,11 @@ import { colors } from "../../theme/colors";
 import Routes, { images } from './routes';
 import styles from "./style";
 import { connect } from 'react-redux';
+import Loader from "../../components/Loader";
 
 
 function SideBar(props) {
+  const [loader, setLoader] = React.useState(false);
 
   function Logout() {
     Alert.alert(
@@ -28,8 +30,23 @@ function SideBar(props) {
 
   };
 
+  async function executeAction(action) {
+    try {
+      props.navigation.toggleDrawer();
+      setLoader(true);
+      await action();
+    }
+    catch (err) {
+      //
+    }
+    finally {
+      setLoader(false)
+    }
+  }
+
   return (
     <Container style={{ backgroundColor: colors.primary.main }}>
+      <Loader isVisible={loader} />
       <ImageBackground source={images.background} style={{ width: '100%', height: '100%' }}>
         <Content
           bounces={false}
@@ -68,7 +85,13 @@ function SideBar(props) {
                   key={data.name + idx}
                   button
                   noBorder
-                  onPress={() => { data.link === undefined ? props.navigation.navigate(data.route, { reload: true }) : Linking.openURL(data.link) }}
+                  onPress={() => {
+                    data.link ?
+                      Linking.openURL(data.link) :
+                      data.action ?
+                        executeAction(data.action) :
+                        props.navigation.navigate(data.route, { reload: true })
+                  }}
                   style={props.activeItemKey === data.route || props.activeItemKey === data.secondaryRoute ?
                     {
                       backgroundColor: 'rgba(255, 255, 255, 0.2)',
@@ -139,7 +162,7 @@ function SideBar(props) {
                 paddingRight: 10,
                 height: 50
               }}>
-                <Text style={{ fontSize: 10, color: '#bdbdbd' }}>Versão 1.0.3</Text>
+                <Text style={{ fontSize: 10, color: '#bdbdbd' }}>Versão 1.0.4</Text>
               </Col>
             </Row>
           </Grid>

@@ -1,5 +1,5 @@
 import BackgroundFetch from 'react-native-background-fetch';
-import JornadaController from './JornadaController';
+import LancamentosJornadaController from './LancamentosJornadaController';
 
 class BackgroundServiceController {
   static async index() {
@@ -9,19 +9,6 @@ class BackgroundServiceController {
     } catch (err) {
       console.log(err);
       return Promise.reject(err);
-    }
-  }
-
-  static async headlessTask() {
-    try {
-      console.log('[BackgroundFetch HeadlessTask] start');
-      const res = await JornadaController.syncLancamentosEnviar(true);
-      console.log('[BackgroundFetch HeadlessTask Reusult], ', res);
-      BackgroundFetch.finish();
-      console.log('[BackgroundFetch HeadlessTask] finished');
-    } catch (err) {
-      console.log(err);
-      BackgroundFetch.finish();
     }
   }
 
@@ -42,8 +29,8 @@ class BackgroundServiceController {
       async () => {
         try {
           console.log('[js] RNBackgroundFetch start');
-          const res = await JornadaController.syncLancamentosEnviar(true);
-          console.log('[js] RNBackgroundFetch Reusult, ', res);
+          // const res = await (new LancamentosJornadaController()).syncNews(true);
+          // console.log('[js] RNBackgroundFetch Reusult, ', res);
           BackgroundFetch.finish(BackgroundFetch.FETCH_RESULT_NEW_DATA);
           console.log('[js] RNBackgroundFetch finished');
         } catch (err) {

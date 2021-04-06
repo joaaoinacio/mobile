@@ -56,7 +56,7 @@ class ErrorHandle{
             let full_error = {
                 data:       moment().format(),
                 message:    error && error.message,
-                stack:      error && error.stack.toString(),
+                stack:      error && error.stack && error.stack.toString(),
                 local:      local,
                 device:     deviceInfo,
                 user:       logged_user.id,

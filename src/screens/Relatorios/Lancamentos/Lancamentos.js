@@ -1,20 +1,20 @@
-import {Container, Text, Icon, View} from 'native-base';
-import React from 'react';
-import CustomHeader from '../../../components/CustomHeader';
-import {styles, images} from './styles';
-import {connect} from 'react-redux';
-import {FlatList, ScrollView} from 'react-native';
-import {isEmpty, isUndefined} from 'lodash';
-import JornadaController from '../../../controllers/JornadaController';
+import { isEmpty } from 'lodash';
 import moment from 'moment';
-import LancamentoItem from './LancamentoItem';
-import LancamentoFilter from './LancamentoFilter';
-import {colors} from '../../../theme/colors';
+import { Container, Icon, Text, View } from 'native-base';
+import React from 'react';
+import { FlatList, ScrollView } from 'react-native';
+import { connect } from 'react-redux';
+import CustomHeader from '../../../components/CustomHeader';
 import InlineLoader from '../../../components/InlineLoader';
+import LancamentosJornadaController from '../../../controllers/LancamentosJornadaController';
+import { colors } from '../../../theme/colors';
+import LancamentoFilter from './LancamentoFilter';
+import LancamentoItem from './LancamentoItem';
+import { styles } from './styles';
 
 function Lancamentos(props) {
   const [collapse, onCollapse] = React.useState(true);
-  const [loader, setLoader] = React.useState(true);
+  const [loader, setLoader] = React.useState(false);
 
   const [period, onPeriodChange] = React.useState({
     startDate: moment().subtract(30, 'days'),
@@ -22,76 +22,64 @@ function Lancamentos(props) {
   });
 
   React.useEffect(() => {
-    getLancamentos(period.startDate, period.endDate);
-  }, [period.endDate, period.startDate]);
+    boot();
+  }, []);
 
-  function getLancamentos(startDate, endDate) {
-    setLoader(true);
-    setTimeout(() => {
-      if (moment().diff(moment(startDate), 'days') >= 59) {
-        console.log('teste');
-        JornadaController.getLancamentosAPI(
-          moment().diff(moment(startDate), 'days'),
-        )
-          .then(() => {
-            setLoader(false);
-          })
-          .catch(err => {
-            setLoader(false);
-            console.log(err);
-          });
-      } else {
-        JornadaController.getLancamentos(
-          'data > ' +
-            moment(startDate).format('YYYY-MM-DD@HH:mm:ss') +
-            ' AND ' +
-            'data < ' +
-            moment(endDate).format('YYYY-MM-DD@HH:mm:ss'),
-        )
-          .then(() => {
-            setLoader(false);
-          })
-          .catch(() => {
-            setLoader(false);
-          });
-      }
-    }, 500);
-  }
-
-  async function syncWithApi(startDate, endDate) {
+  async function boot() {
     try {
-      setLoader(true);
-      await JornadaController.syncLancamentosEnviar();
-      await JornadaController.syncLancamentosApi();
-      await JornadaController.getLancamentos(
-        'data > ' +
-          moment(startDate).format('YYYY-MM-DD@HH:mm:ss') +
-          ' AND ' +
-          'data < ' +
-          moment(endDate).format('YYYY-MM-DD@HH:mm:ss'),
-      );
-      setLoader(false);
-    } catch (err) {
-      setLoader(false);
-      console.log(err);
+      await sync();
+      await getLancamentos();
+    }
+    catch (err) {
+      console.log(err)
     }
   }
 
+  async function sync() {
+    try {
+      setLoader(true);
+      const LancamentosJornadaCont = new LancamentosJornadaController();
+      await LancamentosJornadaCont.syncNews();
+    }
+    catch (err) {
+      console.log(err)
+    }
+    finally {
+      setLoader(false);
+    }
+  }
+
+  React.useEffect(() => {
+    getLancamentos();
+  }, [period.endDate, period.startDate]);
+
+  async function getLancamentos() {
+    try {
+      setLoader(true);
+      const LancamentosJornadaCont = new LancamentosJornadaController();
+      const res = await LancamentosJornadaCont.index({
+        startDate: period.startDate.format('yyyy-MM-DD'),
+        endDate: period.endDate.format('yyyy-MM-DD'),
+      });
+
+    }
+    catch (err) {
+      console.log(err)
+    }
+    finally {
+      setLoader(false);
+    }
+
+  }
+
   function onFilterChange(value, name) {
-    setLoader(true);
     onPeriodChange({
       ...period,
       [name]: moment(value),
     });
-    if (name === 'startDate') {
-      getLancamentos(moment(value), period.endDate);
-    } else {
-      getLancamentos(period.startDate, moment(value));
-    }
-    setLoader(false);
   }
 
-  const renderItem = ({item, index}) => (
+  const renderItem = ({ item, index }) => (
     <LancamentoItem item={item} index={index} lancamentos={props.lancamentos} />
   );
   const keyExtractor = (item, index) =>
@@ -102,7 +90,7 @@ function Lancamentos(props) {
       <Icon
         type="FontAwesome"
         name="ellipsis-h"
-        style={{color: colors.secondary.main}}
+        style={{ color: colors.secondary.main }}
       />
     </View>
   );
@@ -116,7 +104,7 @@ function Lancamentos(props) {
           <Icon
             type="MaterialIcons"
             name="sync"
-            onPress={() => syncWithApi(period.startDate, period.endDate)}
+            onPress={boot}
             style={{
               color: 'white',
             }}
@@ -131,9 +119,9 @@ function Lancamentos(props) {
           period={period}
         />
         {loader &&
-        !isEmpty(props.lancamentos) &&
-        !isEmpty(props.lancamentos.list) &&
-        props.lancamentos.list.length > 7 ? (
+          !isEmpty(props.lancamentos) &&
+          !isEmpty(props.lancamentos.list) &&
+          props.lancamentos.list.length > 7 ? (
           <InlineLoader isVisible={loader} dense />
         ) : null}
         <FlatList

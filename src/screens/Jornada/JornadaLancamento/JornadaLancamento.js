@@ -30,7 +30,7 @@ function JornadaLancamento(props) {
     obs: '',
     data: moment().format('DD/MM/YYYY'),
     hora: moment().format('HH:mm'),
-    full_date: new Date(),
+    full_date: moment(),
   });
 
   const [savedModal, onChangeSavedModal] = React.useState(false);

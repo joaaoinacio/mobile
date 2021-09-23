@@ -11,6 +11,7 @@ import MaterialTextField from '../../../components/MaterialTextField';
 import Modal from '../../../components/Modal';
 import GeolocationController from '../../../controllers/GeolocationController';
 import LancamentosJornadaController from '../../../controllers/LancamentosJornadaController';
+import ScanScreen from './QrCode'
 import { styles } from './styles';
 
 function CardContent({ motorista, veiculo, data, hora }) {
@@ -119,7 +120,9 @@ function JornadaLancamento(props) {
 
   return (
     <Container>
-      <CustomHeader
+      <ScanScreen />
+      
+      {/* <CustomHeader
         title={
           props.navigation.state.params &&
           props.navigation.state.params.descricao
@@ -187,7 +190,7 @@ function JornadaLancamento(props) {
           type={'error'}
         />
         <Loader isVisible={loader} />
-      </Content>
+      </Content> */}
     </Container>
   );
 }

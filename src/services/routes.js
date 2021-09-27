@@ -1,6 +1,6 @@
 const testsRoutes = {
-    url: 'http://dottransporter-api.dotsebr.com',
-    api: 'http://dottransporter-api.dotsebr.com/api/v1'
+    url: 'https://dottransporter-api.dotsebr.com',
+    api: 'https://dottransporter-api.dotsebr.com/api/v1'
 }
 
 const productionRoutes = {

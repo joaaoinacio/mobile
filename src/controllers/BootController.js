@@ -14,6 +14,9 @@ import http from '../services/api';
 import Routes from '../services/routes';
 import SyncWifiController from './ConfigController/SyncWifiController';
 import LancamentosJornadaController from './LancamentosJornadaController';
+import { setJornadaTipos } from '../store/actions';
+import { setVeiculos } from '../store/actions';
+import Axios from 'axios';
 
 class BootController {
   static async index() {
@@ -123,6 +126,19 @@ class BootController {
           });
           await AsyncStorage.removeItem('userLogs');
         }
+        
+        const apiDataJornadaTipo = await http.get(Routes.api + '/tipo-jornada?id=1');
+        const apiDataVeiculos = await http.get(Routes.api + '/veiculos');
+        Store.dispatch(
+          setJornadaTipos({
+            jornadaTipos: apiDataJornadaTipo.data,
+          })
+        );
+        Store.dispatch(
+          setVeiculos({
+            veiculos: apiDataVeiculos.data,
+          })
+        );
       }
 
       const init = await AuthController.getInitConfg();

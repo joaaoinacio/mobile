@@ -10,27 +10,22 @@ import QRCodeScanner from 'react-native-qrcode-scanner';
 function ScanScreen(props) {
 
   const onSuccess = e => {
-    Linking.openURL(e.data).catch(err =>
-      console.error('An error occured', err)
-    );
+    props.onSuccess(e)
   };
 
   return (
     <QRCodeScanner
       onRead={onSuccess}
-      flashMode={RNCamera.Constants.FlashMode.torch}
       topContent={
         <Text style={styles.centerText}>
-          Go to{' '}
-          <Text style={styles.textBold}>wikipedia.org/wiki/QR_code</Text> on
-          your computer and scan the QR code.
+          <Text style={styles.textBold}>Aponte a câmera para o código QR</Text> 
         </Text>
       }
       bottomContent={
-        <TouchableOpacity style={styles.buttonTouchable}>
-          <Text style={styles.buttonText}>OK. Got it!</Text>
-        </TouchableOpacity>
-      }
+          <TouchableOpacity onPress={()=> props.navigation.goBack()} style={styles.buttonTouchable}>
+            <Text style={styles.buttonText}>Voltar</Text>
+          </TouchableOpacity>
+        }
     />
   );
 

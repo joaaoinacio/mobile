@@ -1,42 +1,45 @@
-import {PermissionsAndroid} from 'react-native';
+import { PermissionsAndroid } from 'react-native';
 
 
 const AppPermissions = [
     {
         permission: PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-        title:      "Permissão para salvar arquivos no seu dispositivo.",
-        message:    "Precisamos de sua permissão para salvar arquivos no seu dispositivo e assim você poderá usufruir de todos os benefícios do seu aplicativo, mesmo sem internet!."
+        title: "Permissão para salvar arquivos no seu dispositivo.",
+        message: "Precisamos de sua permissão para salvar arquivos no seu dispositivo e assim você poderá usufruir de todos os benefícios do seu aplicativo, mesmo sem internet!."
     },
     {
         permission: PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-        title:      "Permissão para acessar sua localização.",
-        message:    "Precisamos acessar sua localização, para poder regitrar seu local automaticamente após você realizar um lançamento."
+        title: "Permissão para acessar sua localização.",
+        message: "Precisamos acessar sua localização, para poder regitrar seu local automaticamente após você realizar um lançamento."
+    },
+    {
+        permission: PermissionsAndroid.PERMISSIONS.CAMERA,
+        title: "Permissão para acessar sua câmera.",
+        message: "Precisamos acessar sua câmera, para o leitor de QR Code."
     }
 ]
 
-class PermissionController{
-    
-    static async index(){
+class PermissionController {
+
+    static async index() {
         try {
-            await PermissionController.callPermission(AppPermissions[0])
-            await PermissionController.callPermission(AppPermissions[1])
-            
+            for (let idx = 0; idx < AppPermissions.length; idx++) await PermissionController.callPermission(AppPermissions[idx])
         } catch (error) {
             return Promise.reject(err)
         }
 
     }
 
-    static async callPermission(permission){
+    static async callPermission(permission) {
         try {
             const granted = await PermissionsAndroid.request(
                 permission.permission,
                 {
-                title: permission.title,
-                message: permission.message,
-                buttonNeutral: 'Me lembre depois',
-                buttonNegative: 'Cancelar',
-                buttonPositive: 'OK',
+                    title: permission.title,
+                    message: permission.message,
+                    buttonNeutral: 'Me lembre depois',
+                    buttonNegative: 'Cancelar',
+                    buttonPositive: 'OK',
                 },
             );
             if (granted === PermissionsAndroid.RESULTS.GRANTED) {
@@ -48,7 +51,7 @@ class PermissionController{
             return Promise.reject(err)
         }
     }
-    
+
 
 }
 

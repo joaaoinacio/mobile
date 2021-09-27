@@ -4,7 +4,9 @@ import {
     SET_CONNECTION,
     SET_BOOT_LIST,
     SET_GEOLOCATION,
-    SET_LANCAMENTOS
+    SET_LANCAMENTOS,
+    SET_JORNADA_TIPOS,
+    SET_VEICULOS
 } from './actions_types'
 
 export function setJornada(jornada) {
@@ -49,3 +51,16 @@ export function setLancamentos(lancamentos) {
     };
 }
 
+export function setJornadaTipos(jornadaTipos) {
+    return {
+        type: SET_JORNADA_TIPOS,
+        jornadaTipos: jornadaTipos
+    };
+}
+
+export function setVeiculos(veiculos) {
+    return {
+        type: SET_VEICULOS,
+        veiculos: veiculos
+    };
+}

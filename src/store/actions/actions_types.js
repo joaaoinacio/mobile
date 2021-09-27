@@ -5,3 +5,5 @@ export const SET_CONNECTION     = 'SET_CONNECTION';
 export const SET_BOOT_LIST      = 'SET_BOOT_LIST';
 export const SET_GEOLOCATION    = 'SET_GEOLOCATION';
 export const SET_LANCAMENTOS    = 'SET_LANCAMENTOS';
+export const SET_JORNADA_TIPOS    = 'SET_JORNADA_TIPOS';
+export const SET_VEICULOS    = 'SET_VEICULOS';

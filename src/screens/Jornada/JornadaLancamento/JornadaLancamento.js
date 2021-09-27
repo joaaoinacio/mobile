@@ -137,11 +137,11 @@ function JornadaLancamento(props) {
         text:
           'Nenhum veículo cadastro para este código QR!',
         type: 'error',
-        duration: 3000,
+        duration: 5000,
         buttonText: 'Ok',
       });
   };
-  
+
   return (
     <Container>
       {exigeQr ? (

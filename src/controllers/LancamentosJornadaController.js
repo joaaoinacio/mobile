@@ -118,7 +118,6 @@ export default class LancamentosJornadaController {
                 { lancamentos: news },
                 axios_config
             );
-            console.log('RES AQUI', res)
             await this.db.truncate();
             await this.sync();
 

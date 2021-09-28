@@ -64,8 +64,8 @@ function JornadaLancamento(props) {
       });
       let lancamentoJornadas = res.filter(obj => obj.descricao == 'Jornada');
       setVeiculoQr({
-        veiculo_nome: lancamentoJornadas[0].veiculo_nome,
-        veiculo_id: lancamentoJornadas[0].veiculo_id,
+        placa: lancamentoJornadas[0].veiculo_nome,
+        id: lancamentoJornadas[0].veiculo_id,
       });
     }
 

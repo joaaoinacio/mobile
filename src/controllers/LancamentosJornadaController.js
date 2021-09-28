@@ -99,7 +99,6 @@ export default class LancamentosJornadaController {
         try {
             const isConnected = await SyncWifiController.check();
             if (!isConnected) return Promise.resolve('No connection!');
-
             const response = await this.db.index();
             let news = response.filter(e => e.new);
 

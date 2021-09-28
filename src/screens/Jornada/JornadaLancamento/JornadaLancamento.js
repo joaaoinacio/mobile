@@ -62,7 +62,6 @@ function JornadaLancamento(props) {
         startDate: formatDate(new Date()),
         endDate: formatDate(new Date()),
       });
-      console.log('R E S:', res);
       let lancamentoJornadas = res.filter(obj => obj.descricao == 'Jornada');
       setVeiculoQr({
         veiculo_nome: lancamentoJornadas[0].veiculo_nome,

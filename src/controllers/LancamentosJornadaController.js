@@ -83,7 +83,6 @@ export default class LancamentosJornadaController {
         try {
             const isConnected = await SyncWifiController.check();
             if (isConnected) {
-                console.log('CAIU NO SYNC')
                 const api_response = await APIController.get(`${Routes.api}/jornada/lancamentos?days=${syncDays ?? this.syncDays}`);
                 await this.db.sync({ syncData: api_response });
             }
@@ -119,6 +118,7 @@ export default class LancamentosJornadaController {
                 { lancamentos: news },
                 axios_config
             );
+            console.log('RES AQUI', res)
             await this.db.truncate();
             await this.sync();
 

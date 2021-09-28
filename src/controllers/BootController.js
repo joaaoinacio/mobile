@@ -1,8 +1,8 @@
 import PermissionController from './PermissionController';
 import JornadaController from './JornadaController';
 import GeolocationController from './GeolocationController';
-import { setBootList } from '../store/actions';
-import { Store } from '../store';
+import {setBootList} from '../store/actions';
+import {Store} from '../store';
 import BackgroundServiceController from './BackgroundServiceController';
 import moment from 'moment';
 import AuthController from './AuthController';
@@ -13,10 +13,9 @@ import AsyncStorage from '@react-native-community/async-storage';
 import http from '../services/api';
 import Routes from '../services/routes';
 import SyncWifiController from './ConfigController/SyncWifiController';
-import LancamentosJornadaController from './LancamentosJornadaController';
-import { setJornadaTipos } from '../store/actions';
-import { setVeiculos } from '../store/actions';
-import Axios from 'axios';
+import {setJornadaTipos} from '../store/actions';
+import {setVeiculos} from '../store/actions';
+import Database from '../database';
 
 class BootController {
   static async index() {
@@ -116,7 +115,25 @@ class BootController {
       await ErrorHandle.sync();
 
       const hasInternet = await ConnectionController.isConnected();
-      const checkSyncWifi = await SyncWifiController.check()
+      const checkSyncWifi = await SyncWifiController.check();
+
+      const VeiculoDB = new Database('Veiculo');
+      await VeiculoDB.open();
+      const offlineVeiculosData = await VeiculoDB.index();
+      Store.dispatch(
+        setVeiculos({
+          veiculos: offlineVeiculosData,
+        }),
+      );
+
+      const JornadasTipoDB = new Database('JornadasTipo');
+      await JornadasTipoDB.open();
+      const offlineJornadasTipoData = await JornadasTipoDB.index();
+      Store.dispatch(
+        setJornadaTipos({
+          jornadaTipos: offlineJornadasTipoData,
+        }),
+      );
 
       if (hasInternet && checkSyncWifi) {
         const userLogs = await AsyncStorage.getItem('userLogs');
@@ -126,24 +143,40 @@ class BootController {
           });
           await AsyncStorage.removeItem('userLogs');
         }
-        
-        const apiDataJornadaTipo = await http.get(Routes.api + '/tipo-jornada?id=1');
-        const apiDataVeiculos = await http.get(Routes.api + '/veiculos');
+
+        const user = await AuthController.getUser();
+
+        const apiDataJornadaTipo = await http.get(
+          Routes.api + '/tipo-jornada?id=' + user.empresa.id,
+        );
+        await JornadasTipoDB.deleteAll();
+        const JornadasTipoDBData = await JornadasTipoDB.store(
+          apiDataJornadaTipo && apiDataJornadaTipo.data,
+        );
+
+        const apiDataVeiculos = await http.get(Routes.api + '/veiculos?empresa_id=' + user.empresa.id);
+        console.log(apiDataVeiculos)
+        await VeiculoDB.deleteAll();
+        const VeiculoDBData = await VeiculoDB.store(
+          apiDataVeiculos && apiDataVeiculos.data,
+        );
+
         Store.dispatch(
           setJornadaTipos({
-            jornadaTipos: apiDataJornadaTipo.data,
-          })
+            jornadaTipos: JornadasTipoDBData,
+          }),
         );
+
         Store.dispatch(
           setVeiculos({
-            veiculos: apiDataVeiculos.data,
-          })
+            veiculos: VeiculoDBData,
+          }),
         );
       }
 
       const init = await AuthController.getInitConfg();
       if (init && init.sync) {
-        await AuthController.setInitConfg({ sync: false });
+        await AuthController.setInitConfg({sync: false});
       }
       return Promise.resolve('ok');
     } catch (err) {
@@ -179,7 +212,7 @@ class BootController {
           ],
         }),
       );
-      Date.prototype.toJSON = function () {
+      Date.prototype.toJSON = function() {
         return moment(this).format();
       };
 

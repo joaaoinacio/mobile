@@ -55,7 +55,37 @@ function JornadaLancamento(props) {
       obj => obj.descricao == props.navigation.state.params.descricao,
     );
     setExigeQr(props.jornadaTipos[index].exigeqrcode);
+
+    async function fetchMyAPI() {
+      const LancamentosJornadaCont = new LancamentosJornadaController();
+      const res = await LancamentosJornadaCont.index({
+        startDate: formatDate(new Date()),
+        endDate: formatDate(new Date()),
+      });
+      console.log('R E S:', res);
+      let lancamentoJornadas = res.filter(obj => obj.descricao == 'Jornada');
+      setVeiculoQr({
+        veiculo_nome: lancamentoJornadas[0].veiculo_nome,
+        veiculo_id: lancamentoJornadas[0].veiculo_id,
+      });
+    }
+
+    fetchMyAPI();
   }, []);
+
+  function formatDate(date) {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2) 
+        month = '0' + month;
+    if (day.length < 2) 
+        day = '0' + day;
+
+    return [year, month, day].join('-');
+}
 
   async function storeLancamento() {
     try {
@@ -106,10 +136,10 @@ function JornadaLancamento(props) {
           props.navigation.state.params.descricao,
         new: true,
       };
-
       await new LancamentosJornadaController().store({data});
       onChangeSavedModal(true);
     } catch (err) {
+      console.log('erro aqui', err);
       onChangeErrorModal(true);
       setLoader(false);
     } finally {
@@ -127,21 +157,20 @@ function JornadaLancamento(props) {
     props.navigation.goBack();
   }
 
-  const validaQR = e => {
+  const validaQR = async e => {
     let i = props.veiculos.findIndex(obj => e.data == obj.qrcode);
     if (i > -1) {
       setExigeQr(false);
       setVeiculoQr(props.veiculos[i]);
     } else
       Toast.show({
-        text:
-          'Nenhum veículo cadastro para este código QR!',
+        text: 'Nenhum veículo cadastro para este código QR!',
         type: 'error',
-        duration: 3000,
+        duration: 5000,
         buttonText: 'Ok',
       });
   };
-  
+
   return (
     <Container>
       {exigeQr ? (

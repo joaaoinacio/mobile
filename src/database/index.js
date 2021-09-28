@@ -4,13 +4,17 @@ import { isEmpty, isUndefined } from 'lodash';
 import JornadaMenuService from './Jornada/Services/JornadaMenuService';
 import JornadaLancamentosEnviarSchema from './Jornada/Schemas/JornadaLancamentosEnviarSchema';
 import JornadaLancamentosSchema from './Jornada/Schemas/JornadaLancamentosSchema';
+import VeiculoSchema from './Jornada/Schemas/VeiculoSchema';
+import JornadasTipoSchema from './Jornada/Schemas/JornadasTipoSchema';
 import JornadaLancamentoService from './Jornada/Services/JornadaLancamentoService';
 import { Toast } from 'native-base';
 
 const Schemas = {
     JornadaMenu: JornadaMenuSchema,
     JornadaLancamentoEnviar: JornadaLancamentosEnviarSchema,
-    JornadaLancamentos: JornadaLancamentosSchema
+    JornadaLancamentos: JornadaLancamentosSchema,
+    Veiculo: VeiculoSchema,
+    JornadasTipo: JornadasTipoSchema,
 }
 
 const Services = {

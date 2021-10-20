@@ -7,6 +7,30 @@ import {
 import { RNCamera } from 'react-native-camera';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 
+const styles = StyleSheet.create({
+  centerText: {
+    flex: 1,
+    fontSize: 18,
+    padding: 32,
+    color: '#777',
+    marginBottom: 70
+  },
+  textBold: {
+    fontWeight: '500',
+    color: '#000',
+    top: 0,
+  },
+  buttonText: {
+    fontSize: 21,
+    color: 'rgb(0,122,255)',
+    bottom: 0,
+  },
+  buttonTouchable: {
+    padding: 16,
+    marginTop: 70
+  }
+});
+
 function ScanScreen(props) {
 
   const onSuccess = e => {
@@ -30,27 +54,4 @@ function ScanScreen(props) {
   );
 
 }
-
-
-const styles = StyleSheet.create({
-  centerText: {
-    flex: 1,
-    fontSize: 18,
-    padding: 32,
-    color: '#777'
-  },
-  textBold: {
-    fontWeight: '500',
-    color: '#000'
-  },
-  buttonText: {
-    fontSize: 21,
-    color: 'rgb(0,122,255)'
-  },
-  buttonTouchable: {
-    padding: 16
-  }
-});
-
-
 export default ScanScreen;

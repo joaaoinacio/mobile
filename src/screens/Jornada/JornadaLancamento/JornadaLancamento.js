@@ -52,7 +52,7 @@ function JornadaLancamento(props) {
   React.useEffect(() => {
     GeolocationController.index();
     let index = props.jornadaTipos.findIndex(
-      obj => obj.descricao == props.navigation.state.params.descricao,
+      (obj) => obj.descricao == props.navigation.state.params.descricao,
     );
     setExigeQr(props.jornadaTipos[index].exigeqrcode);
 
@@ -128,7 +128,9 @@ function JornadaLancamento(props) {
           props.navigation.state.params.descricao,
         new: true,
       };
-      await new LancamentosJornadaController().store({data});
+      const LJornadaController = new LancamentosJornadaController();
+      await LJornadaController.store({data});
+      await LJornadaController.setVeiculo({veiculo: veiculoQr});
       onChangeSavedModal(true);
     } catch (err) {
       console.log('erro aqui', err);
@@ -149,8 +151,8 @@ function JornadaLancamento(props) {
     props.navigation.goBack();
   }
 
-  const validaQR = async e => {
-    let i = props.veiculos.findIndex(obj => e.data == obj.qrcode);
+  const validaQR = async (e) => {
+    let i = props.veiculos.findIndex((obj) => e.data == obj.qrcode);
     if (i > -1) {
       setVeiculoQr(props.veiculos[i]);
     } else
@@ -218,7 +220,7 @@ function JornadaLancamento(props) {
               inputContainerPadding={30}
               multiline
               placeholder="Digite aqui..."
-              onChangeText={value => onTextFieldChange(value, 'obs')}
+              onChangeText={(value) => onTextFieldChange(value, 'obs')}
             />
 
             <Grid style={{marginTop: 20}}>
@@ -257,7 +259,7 @@ function JornadaLancamento(props) {
   );
 }
 
-const mapStateToProps = store => ({
+const mapStateToProps = (store) => ({
   user: store.user.user,
   geolocation: store.geolocation.geolocation,
   jornadaTipos:
@@ -270,7 +272,4 @@ const mapStateToProps = store => ({
     store.veiculos.veiculos.veiculos,
 });
 
-export default connect(
-  mapStateToProps,
-  null,
-)(JornadaLancamento);
+export default connect(mapStateToProps, null)(JornadaLancamento);

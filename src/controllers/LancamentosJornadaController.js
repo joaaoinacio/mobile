@@ -70,8 +70,19 @@ export default class LancamentosJornadaController {
 
   async setVeiculo({veiculo}) {
     try {
+      const currentUser = await AuthController.getUser(true);
       await AuthController.updateUser({
-        veiculo,
+        veiculo: {
+          ...(currentUser && currentUser.veiculo ? currentUser.veiculo : {}),
+          veiculo: {
+            ...(currentUser &&
+            currentUser.veiculo &&
+            currentUser.veiculo.veiculo
+              ? currentUser.veiculo.veiculo
+              : {}),
+            ...veiculo,
+          },
+        },
       });
     } catch (err) {
       console.log(err);

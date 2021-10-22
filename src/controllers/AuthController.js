@@ -189,13 +189,15 @@ export default class AuthController {
   static async getUser(noDispatch) {
     try {
       const value = await AsyncStorage.getItem('user');
-      if (value !== null && !noDispatch) {
-        Store.dispatch(
-          setUser({
-            user: JSON.parse(value),
-          }),
-        );
-        return Promise.resolve(JSON.parse(value));
+      if (value !== null) {
+        const parsedUser = JSON.parse(value);
+        if (!noDispatch)
+          Store.dispatch(
+            setUser({
+              user: parsedUser,
+            }),
+          );
+        return Promise.resolve(parsedUser);
       } else return Promise.resolve(null);
     } catch (error) {
       return Promise.reject(error);
@@ -249,10 +251,12 @@ export default class AuthController {
   static async updateUser(data = {}) {
     try {
       const currentUser = await AuthController.getUser(true);
-      const newUser = {
+
+      let newUser = {
         ...currentUser,
         ...data,
       };
+
       await AsyncStorage.setItem('user', JSON.stringify(newUser));
       Store.dispatch(
         setUser({

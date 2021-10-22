@@ -80,6 +80,7 @@ function JornadaLancamento(props) {
   }
 
   async function storeLancamento() {
+    console.log('props console ==>', props)
     try {
       setDisableButton(true);
       setLoader(true);
@@ -130,7 +131,7 @@ function JornadaLancamento(props) {
       };
       const LJornadaController = new LancamentosJornadaController();
       await LJornadaController.store({data});
-      await LJornadaController.setVeiculo({veiculo: veiculoQr});
+      if(veiculoQr) await LJornadaController.setVeiculo({veiculo: veiculoQr});
       onChangeSavedModal(true);
     } catch (err) {
       console.log('erro aqui', err);

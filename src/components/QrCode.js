@@ -1,19 +1,22 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {
-  Linking, StyleSheet,
+  Linking,
+  StyleSheet,
   Text,
-  TouchableOpacity
+  TouchableOpacity,
+  Dimensions,
 } from 'react-native';
-import { RNCamera } from 'react-native-camera';
+import {RNCamera} from 'react-native-camera';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 
 const styles = StyleSheet.create({
   centerText: {
     flex: 1,
     fontSize: 18,
-    padding: 32,
+    padding: 12,
     color: '#777',
-    marginBottom: 70
+    top: 0,
+    position: 'absolute',
   },
   textBold: {
     fontWeight: '500',
@@ -26,15 +29,18 @@ const styles = StyleSheet.create({
     bottom: 0,
   },
   buttonTouchable: {
-    padding: 16,
-    marginTop: 70
-  }
+    padding: 12,
+    bottom: 0,
+    position: 'absolute',
+  },
+  cameraContainer: {
+    // height: Dimensions.get('window').height * 0.6,
+  },
 });
 
 function ScanScreen(props) {
-
   const onSuccess = e => {
-    props.onSuccess(e)
+    props.onSuccess(e);
   };
 
   return (
@@ -42,16 +48,18 @@ function ScanScreen(props) {
       onRead={onSuccess}
       topContent={
         <Text style={styles.centerText}>
-          <Text style={styles.textBold}>Aponte a câmera para o código QR</Text> 
+          <Text style={styles.textBold}>Aponte a câmera para o código QR</Text>
         </Text>
       }
+      cameraStyle={styles.cameraContainer}
       bottomContent={
-          <TouchableOpacity onPress={()=> props.navigation.goBack()} style={styles.buttonTouchable}>
-            <Text style={styles.buttonText}>Voltar</Text>
-          </TouchableOpacity>
-        }
+        <TouchableOpacity
+          onPress={() => props.navigation.goBack()}
+          style={styles.buttonTouchable}>
+          <Text style={styles.buttonText}>Voltar</Text>
+        </TouchableOpacity>
+      }
     />
   );
-
 }
 export default ScanScreen;

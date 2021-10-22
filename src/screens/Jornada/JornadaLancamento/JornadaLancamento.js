@@ -62,11 +62,6 @@ function JornadaLancamento(props) {
         startDate: formatDate(new Date()),
         endDate: formatDate(new Date()),
       });
-      let lancamentoJornadas = res.filter(obj => obj.descricao == 'Jornada');
-      setVeiculoQr({
-        placa: lancamentoJornadas[0].veiculo_nome,
-        id: lancamentoJornadas[0].veiculo_id,
-      });
     }
 
     fetchMyAPI();
@@ -74,17 +69,15 @@ function JornadaLancamento(props) {
 
   function formatDate(date) {
     var d = new Date(date),
-        month = '' + (d.getMonth() + 1),
-        day = '' + d.getDate(),
-        year = d.getFullYear();
+      month = '' + (d.getMonth() + 1),
+      day = '' + d.getDate(),
+      year = d.getFullYear();
 
-    if (month.length < 2) 
-        month = '0' + month;
-    if (day.length < 2) 
-        day = '0' + day;
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
 
     return [year, month, day].join('-');
-}
+  }
 
   async function storeLancamento() {
     try {
@@ -159,7 +152,6 @@ function JornadaLancamento(props) {
   const validaQR = async e => {
     let i = props.veiculos.findIndex(obj => e.data == obj.qrcode);
     if (i > -1) {
-      setExigeQr(false);
       setVeiculoQr(props.veiculos[i]);
     } else
       Toast.show({
@@ -169,6 +161,10 @@ function JornadaLancamento(props) {
         buttonText: 'Ok',
       });
   };
+
+  React.useEffect(() => {
+    if (veiculoQr) setExigeQr(false);
+  }, [veiculoQr]);
 
   return (
     <Container>
@@ -185,6 +181,8 @@ function JornadaLancamento(props) {
             back
           />
           <Content contentContainerStyle={styles.content}>
+            {console.log('VEICULO QR ===>', veiculoQr)}
+            {console.log('PROPS USER ==>', props.user.user.veiculo)}
             <CustomCard
               title={
                 'Evento: ' +

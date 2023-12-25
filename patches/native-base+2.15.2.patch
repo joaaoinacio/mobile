@@ -1,0 +1,12 @@
+diff --git a/node_modules/native-base/index.d.ts b/node_modules/native-base/index.d.ts
+index dd661c0..cbadc20 100644
+--- a/node_modules/native-base/index.d.ts
++++ b/node_modules/native-base/index.d.ts
+@@ -858,6 +858,7 @@ declare module "native-base" {
+ 
+ 		interface StyleProvider extends Testable {
+ 			style?: any;
++			children?: React.ReactNode;
+ 		}
+ 
+ 		interface SwipeRow extends Testable {

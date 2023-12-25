@@ -14,6 +14,7 @@ import LancamentosJornadaController from '../../../controllers/LancamentosJornad
 import ScanScreen from '../../../components/QrCode';
 import {styles} from './styles';
 import {Toast} from 'native-base';
+import {useRoute} from '@react-navigation/native';
 
 function CardContent({motorista, veiculo, data, hora}) {
   return (
@@ -28,6 +29,9 @@ function CardContent({motorista, veiculo, data, hora}) {
 }
 
 function JornadaLancamento(props) {
+  const route = useRoute();
+  const params = route.params;
+
   const [values, onChange] = React.useState({
     obs: '',
     data: moment().format('DD/MM/YYYY'),
@@ -51,10 +55,10 @@ function JornadaLancamento(props) {
 
   React.useEffect(() => {
     GeolocationController.index();
-    let index = props.jornadaTipos.findIndex(
-      (obj) => obj.descricao == props.navigation.state.params.descricao,
+    let index = props.jornadaTipos?.findIndex(
+      obj => obj.descricao == params?.descricao,
     );
-    setExigeQr(props.jornadaTipos[index].exigeqrcode);
+    setExigeQr(props.jornadaTipos?.[index]?.exigeqrcode);
 
     async function fetchMyAPI() {
       const LancamentosJornadaCont = new LancamentosJornadaController();
@@ -121,11 +125,8 @@ function JornadaLancamento(props) {
             props.user.user.veiculo.id,
         obs: values.obs,
         status: 3,
-        tipo_id:
-          props.navigation.state.params && props.navigation.state.params.id,
-        descricao:
-          props.navigation.state.params &&
-          props.navigation.state.params.descricao,
+        tipo_id: params && params.id,
+        descricao: params && params.descricao,
         new: true,
       };
       const LJornadaController = new LancamentosJornadaController();
@@ -151,8 +152,8 @@ function JornadaLancamento(props) {
     props.navigation.goBack();
   }
 
-  const validaQR = async (e) => {
-    let i = props.veiculos.findIndex((obj) => e.data == obj.qrcode);
+  const validaQR = async e => {
+    let i = props.veiculos?.findIndex(obj => e.data == obj.qrcode);
     if (i > -1) {
       setVeiculoQr(props.veiculos[i]);
     } else
@@ -175,10 +176,7 @@ function JornadaLancamento(props) {
       ) : (
         <>
           <CustomHeader
-            title={
-              props.navigation.state.params &&
-              props.navigation.state.params.descricao
-            }
+            title={params && params.descricao}
             navigation={props}
             back
           />
@@ -186,12 +184,7 @@ function JornadaLancamento(props) {
             {console.log('VEICULO QR ===>', veiculoQr)}
             {console.log('PROPS USER ==>', props.user.user.veiculo)}
             <CustomCard
-              title={
-                'Evento: ' +
-                (props.navigation.state.params
-                  ? props.navigation.state.params.descricao
-                  : '')
-              }
+              title={'Evento: ' + (params ? params.descricao : '')}
               content={
                 <CardContent
                   motorista={
@@ -220,7 +213,7 @@ function JornadaLancamento(props) {
               inputContainerPadding={30}
               multiline
               placeholder="Digite aqui..."
-              onChangeText={(value) => onTextFieldChange(value, 'obs')}
+              onChangeText={value => onTextFieldChange(value, 'obs')}
             />
 
             <Grid style={{marginTop: 20}}>
@@ -259,7 +252,7 @@ function JornadaLancamento(props) {
   );
 }
 
-const mapStateToProps = (store) => ({
+const mapStateToProps = store => ({
   user: store.user.user,
   geolocation: store.geolocation.geolocation,
   jornadaTipos:
@@ -272,4 +265,4 @@ const mapStateToProps = (store) => ({
     store.veiculos.veiculos.veiculos,
 });
 
-export default connect(mapStateToProps, null)(JornadaLancamento);
+export default connect(mapStateToProps)(JornadaLancamento);

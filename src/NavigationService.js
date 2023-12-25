@@ -1,22 +1,20 @@
-import { NavigationActions } from 'react-navigation';
+import {createNavigationContainerRef} from '@react-navigation/native';
 
-let _navigator;
+export const navigationRef = createNavigationContainerRef();
 
-function setTopLevelNavigator(navigatorRef) {
-  _navigator = navigatorRef;
+function navigate(name, params) {
+  if (navigationRef.isReady()) {
+    navigationRef.navigate(name, params);
+  }
 }
 
-function navigate(routeName, params) {
-  _navigator.dispatch(
-    NavigationActions.navigate({
-      routeName,
-      params,
-    })
-  );
+function resetRoot(state) {
+  if (navigationRef.isReady()) {
+    navigationRef.resetRoot(state);
+  }
 }
-
 
 export default {
   navigate,
-  setTopLevelNavigator,
+  resetRoot,
 };

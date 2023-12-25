@@ -10,16 +10,15 @@ import ConnectionController from './ConnectionController';
 export default class JornadaController {
   static async index(forceUpdate) {
     //CREATE DATABASE INSTANCE
-    const DB = new Database('JornadaMenu');
     try {
       let storeData = Store.getState().jornada.jornada;
       if (!isEmpty(storeData) && !isEmpty(storeData.menu) && !forceUpdate) {
         return Promise.resolve('Done');
       }
       //OPEN DATABASE
-      await DB.open();
+      await Database.open('JornadaMenu');
       //GET OFFLINE VALUES
-      const offlineData = await DB.index();
+      const offlineData = await Database.index();
       //DISPACH OFFLINE VALUES ALREADY SETTED
       Store.dispatch(
         setJornada({
@@ -33,8 +32,8 @@ export default class JornadaController {
       if (isConnected) {
         //GET DATA FROM API
         const apiData = await http.get(Routes.api + '/jornada/menu-dinamico');
-        await DB.deleteAll();
-        const dbData = await DB.store(apiData && apiData.data);
+        await Database.deleteAll();
+        const dbData = await Database.store(apiData && apiData.data);
         //SET REDUX STORE
         Store.dispatch(
           setJornada({
@@ -42,18 +41,18 @@ export default class JornadaController {
           }),
         );
         //CLOSE DATABASE
-        await DB.close();
+        await Database.close();
         //RESOLVE DATA
         return Promise.resolve(dbData);
       }
       //HAS NO CONNECTION
       else {
         //CLOSE DATABASE
-        await DB.close();
+        await Database.close();
         return Promise.resolve('Done!');
       }
     } catch (err) {
-      DB.close();
+      Database.close();
       return Promise.reject(err);
     }
   }

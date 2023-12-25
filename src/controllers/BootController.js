@@ -9,7 +9,7 @@ import AuthController from './AuthController';
 import ErrorHandle from './ErrorHandle';
 import DeviceInfoController from './DeviceInfoController';
 import ConnectionController from './ConnectionController';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import http from '../services/api';
 import Routes from '../services/routes';
 import SyncWifiController from './ConfigController/SyncWifiController';
@@ -117,18 +117,16 @@ class BootController {
       const hasInternet = await ConnectionController.isConnected();
       const checkSyncWifi = await SyncWifiController.check();
 
-      const VeiculoDB = new Database('Veiculo');
-      await VeiculoDB.open();
-      const offlineVeiculosData = await VeiculoDB.index();
+      await Database.open('Veiculo');
+      const offlineVeiculosData = await Database.index();
       Store.dispatch(
         setVeiculos({
           veiculos: offlineVeiculosData,
         }),
       );
 
-      const JornadasTipoDB = new Database('JornadasTipo');
-      await JornadasTipoDB.open();
-      const offlineJornadasTipoData = await JornadasTipoDB.index();
+      await Database.open('JornadasTipo');
+      const offlineJornadasTipoData = await Database.index();
       Store.dispatch(
         setJornadaTipos({
           jornadaTipos: offlineJornadasTipoData,
@@ -149,15 +147,17 @@ class BootController {
         const apiDataJornadaTipo = await http.get(
           Routes.api + '/tipo-jornada?id=' + user.empresa.id,
         );
-        await JornadasTipoDB.deleteAll();
-        const JornadasTipoDBData = await JornadasTipoDB.store(
+        await Database.deleteAll();
+        const JornadasTipoDBData = await Database.store(
           apiDataJornadaTipo && apiDataJornadaTipo.data,
         );
 
-        const apiDataVeiculos = await http.get(Routes.api + '/veiculos?empresa_id=' + user.empresa.id);
-        console.log(apiDataVeiculos)
-        await VeiculoDB.deleteAll();
-        const VeiculoDBData = await VeiculoDB.store(
+        const apiDataVeiculos = await http.get(
+          Routes.api + '/veiculos?empresa_id=' + user.empresa.id,
+        );
+        console.log(apiDataVeiculos);
+        await Database.deleteAll();
+        const VeiculoDBData = await Database.store(
           apiDataVeiculos && apiDataVeiculos.data,
         );
 
@@ -198,7 +198,8 @@ class BootController {
       await GeolocationController.index();
       return Promise.resolve('ok');
     } catch (err) {
-      return Promise.reject(err);
+      console.log(err);
+      return Promise.resolve('ok');
     }
   }
 
@@ -212,7 +213,7 @@ class BootController {
           ],
         }),
       );
-      Date.prototype.toJSON = function() {
+      Date.prototype.toJSON = function () {
         return moment(this).format();
       };
 

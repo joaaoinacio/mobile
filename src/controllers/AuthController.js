@@ -2,7 +2,7 @@ import Routes from '../services/routes';
 import Axios from 'axios';
 import apiErros, {voidError} from '../services/apiErrors';
 import {Toast} from 'native-base';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import NavigationService from '../NavigationService';
 import {isEmpty} from 'lodash';
 import {Store} from '../store';
@@ -23,7 +23,7 @@ export default class AuthController {
         grant_type: 'password',
         ...user,
       })
-        .then((response) => {
+        .then(response => {
           if (isEmpty(response)) {
             voidError();
             reject('Network Error!');
@@ -34,16 +34,16 @@ export default class AuthController {
           }
 
           AuthController.setPersistences(response.data)
-            .then(async (res) => {
+            .then(async res => {
               await SecuryStorageController.store(user);
               await AsyncStorage.setItem('logged', 'true');
               resolve(response);
             })
-            .catch((err) => {
+            .catch(err => {
               reject(err);
             });
         })
-        .catch((error) => {
+        .catch(error => {
           if (isEmpty(error)) {
             voidError();
             reject('Network Error!');
@@ -224,10 +224,10 @@ export default class AuthController {
 
   static getAuthorization() {
     Promise.resolve(AsyncStorage.getItem('token'))
-      .then((value) => {
+      .then(value => {
         Axios.defaults.headers.common['Authorization'] = value;
       })
-      .catch((erro) => {
+      .catch(erro => {
         console.error(erro);
       });
     return Axios.defaults.headers.common['Authorization'];
@@ -281,14 +281,13 @@ export default class AuthController {
   }
 
   static async dropDatabases() {
-    const DB = new Database('JornadaLancamentos');
     try {
-      await DB.open();
-      await DB.deleteAll();
-      await DB.close();
+      await Database.open('JornadaLancamentos');
+      await Database.deleteAll();
+      await Database.close();
       return Promise.resolve('Done');
     } catch (err) {
-      await DB.close();
+      await Database.close();
       return Promise.reject(err);
     }
   }

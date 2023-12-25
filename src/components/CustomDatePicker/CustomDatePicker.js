@@ -1,45 +1,46 @@
-import React from 'react';
-import { styles } from './styles';
-import DatePicker from 'react-native-datepicker'
+import React, {useState} from 'react';
+import {View, TouchableOpacity, Text} from 'react-native';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {Icon, Item, Label} from 'native-base';
-import {View} from 'react-native';
 import moment from 'moment';
+import {styles} from './styles';
 
-const CustomDatePicker = ({
-    onDateChange,
-    date,
-    placeholder,
-    label,
-    ...restProps
-}) => (
-        <View style={styles.root}>
-            <Item style={styles.datePicker} stackedLabel>
-                <Label>{label}</Label>
-                <DatePicker                                
-                    locale={"pt-br"}
-                    style={{width: '100%'}}            
-                    confirmBtnText="Confirmar"
-                    format="DD/MM/YYYY"
-                    cancelBtnText="Cancelar"   
-                    placeholder={placeholder}                       
-                    placeHolderTextStyle={{ color: "#757575" }}
-                    onDateChange={(newDate) => onDateChange(moment(newDate, 'DD/MM/YYYY'))}
-                    date={date}
-                    customStyles={styles.customStyles}
-                    iconComponent={
-                        <Icon 
-                            name='calendar' 
-                            type="FontAwesome" 
-                            style={styles.dateIcon}
-                        />
-                    }
-                    {...restProps}                                                          
-                />
-            </Item>
-        </View>
-        
+const CustomDatePicker = ({onDateChange, date, label, ...restProps}) => {
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
-) 
+  const showDatePicker = () => {
+    setDatePickerVisibility(true);
+  };
 
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
+  };
 
-export default CustomDatePicker
+  const handleConfirm = date => {
+    hideDatePicker();
+    onDateChange(moment(date));
+  };
+
+  return (
+    <View style={styles.root}>
+      <Item style={styles.datePicker} stackedLabel>
+        {label && <Label>{label}</Label>}
+        <TouchableOpacity onPress={showDatePicker} style={styles.dateInput}>
+          <Icon name="calendar" type="FontAwesome" style={styles.dateIcon} />
+          <Text style={styles.dateText}>
+            {date ? moment(date).format('DD/MM/YYYY') : 'Select date'}
+          </Text>
+        </TouchableOpacity>
+        <DateTimePickerModal
+          isVisible={isDatePickerVisible}
+          mode="date"
+          onConfirm={handleConfirm}
+          onCancel={hideDatePicker}
+          {...restProps}
+        />
+      </Item>
+    </View>
+  );
+};
+
+export default CustomDatePicker;

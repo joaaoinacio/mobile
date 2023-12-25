@@ -1,12 +1,5 @@
-import React, {Component} from 'react';
-import {
-  Linking,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  Dimensions,
-} from 'react-native';
-import {RNCamera} from 'react-native-camera';
+import React from 'react';
+import {StyleSheet, Text, TouchableOpacity} from 'react-native';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 
 const styles = StyleSheet.create({

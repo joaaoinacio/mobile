@@ -44,7 +44,6 @@ function Home(props) {
         backgroundColor={colors.primary.main}
         barStyle={Platform.OS === 'ios' ? 'dark-content' : 'light-content'}
       />
-      {/* <CustomHeader title="" navigation={props}/> */}
       <AnimatedTextLoading
         data={props.bootList ? props.bootList.list : ['Carregando Aguarde...']}
       />
@@ -59,7 +58,4 @@ const mapStateToProps = store => ({
 const mapDispatchToProps = dispatch =>
   bindActionCreators({setBootList}, dispatch);
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Home);
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

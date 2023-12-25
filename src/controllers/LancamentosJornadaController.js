@@ -12,7 +12,8 @@ import {Toast} from 'native-base';
 
 export default class LancamentosJornadaController {
   constructor() {
-    this.db = new Database({name: 'jornadaLancamentos'});
+    this.db = Database;
+    this.db.open('JornadaLancamentos');
     this.syncDays = 500;
   }
 
@@ -37,7 +38,7 @@ export default class LancamentosJornadaController {
     try {
       if (isEmpty(data)) return [];
 
-      data = data.filter((e) => {
+      data = data.filter(e => {
         let date = moment(e.data).format('yyyy-MM-DD');
         if (
           moment(startDate).isSameOrBefore(date, 'day') &&
@@ -122,7 +123,7 @@ export default class LancamentosJornadaController {
       const isConnected = await SyncWifiController.check();
       if (!isConnected) return Promise.resolve('No connection!');
       const response = await this.db.index();
-      let news = response.filter((e) => e.new);
+      let news = response.filter(e => e.new);
 
       if (isEmpty(news)) {
         await this.sync();

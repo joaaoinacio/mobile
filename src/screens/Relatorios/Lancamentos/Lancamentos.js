@@ -2,7 +2,7 @@ import { isEmpty } from 'lodash';
 import moment from 'moment';
 import { Container, Icon, Text, View } from 'native-base';
 import React from 'react';
-import { FlatList, ScrollView } from 'react-native';
+import { FlatList } from 'react-native';
 import { connect } from 'react-redux';
 import CustomHeader from '../../../components/CustomHeader';
 import InlineLoader from '../../../components/InlineLoader';
@@ -69,7 +69,6 @@ function Lancamentos(props) {
     finally {
       setLoader(false);
     }
-
   }
 
   function onFilterChange(value, name) {
@@ -82,8 +81,9 @@ function Lancamentos(props) {
   const renderItem = ({ item, index }) => (
     <LancamentoItem item={item} index={index} lancamentos={props.lancamentos} />
   );
-  const keyExtractor = (item, index) =>
-    'jornada_lancamento_item' + index + item.data;
+  
+  const keyExtractor = (item, index) => 'jornada_lancamento_item_' + index + item.data;
+
   const emptyComponent = () => (
     <View style={styles.emptyContainer}>
       <Text>Sem lançamentos para esse período.</Text>
@@ -105,37 +105,25 @@ function Lancamentos(props) {
             type="MaterialIcons"
             name="sync"
             onPress={boot}
-            style={{
-              color: 'white',
-            }}
+            style={{ color: 'white' }}
           />
         }
       />
-      <ScrollView stickyHeaderIndices={[0]}>
-        <LancamentoFilter
-          isCollapsed={collapse}
-          onCollapse={() => onCollapse(!collapse)}
-          onChange={onFilterChange}
-          period={period}
-        />
-        {loader &&
-          !isEmpty(props.lancamentos) &&
-          !isEmpty(props.lancamentos.list) &&
-          props.lancamentos.list.length > 7 ? (
-          <InlineLoader isVisible={loader} dense />
-        ) : null}
-        <FlatList
-          data={
-            !isEmpty(props.lancamentos) && !isEmpty(props.lancamentos.list)
-              ? props.lancamentos.list
-              : []
-          }
-          keyExtractor={keyExtractor}
-          renderItem={renderItem}
-          ListEmptyComponent={!loader ? emptyComponent : null}
-        />
-        {loader ? <InlineLoader isVisible={loader} /> : null}
-      </ScrollView>
+      <FlatList
+        ListHeaderComponent={
+          <LancamentoFilter
+            isCollapsed={collapse}
+            onCollapse={() => onCollapse(!collapse)}
+            onChange={onFilterChange}
+            period={period}
+          />
+        }
+        data={!isEmpty(props.lancamentos) && !isEmpty(props.lancamentos.list) ? props.lancamentos.list : []}
+        keyExtractor={keyExtractor}
+        renderItem={renderItem}
+        ListEmptyComponent={!loader ? emptyComponent : null}
+        ListFooterComponent={loader ? <InlineLoader isVisible={loader} /> : null}
+      />
     </Container>
   );
 }

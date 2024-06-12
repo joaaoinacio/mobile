@@ -8,7 +8,6 @@ import {TouchableOpacity, View, Image, FlatList, BackHandler } from 'react-nativ
 import {isEmpty} from 'lodash';
 import ConnectionController from '../../../controllers/ConnectionController';
 
-
 function MenuItem({
   descricao,
   id,
@@ -40,81 +39,81 @@ function MenuItemMore({
   )
 }
 
-
 function JornadaMenu(props) {
 
-    React.useEffect(() => {
+  React.useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', backPress);
+    props.navigation.addListener("didBlur", () => {
+      BackHandler.removeEventListener('hardwareBackPress', backPress);      
+    });
+    props.navigation.addListener("didFocus", () => {     
       BackHandler.addEventListener('hardwareBackPress', backPress);
-      props.navigation.addListener("didBlur", () => {
-        BackHandler.removeEventListener('hardwareBackPress', backPress);      
-      });
-      props.navigation.addListener("didFocus", () => {     
-        BackHandler.addEventListener('hardwareBackPress', backPress);
-      });   
-      JornadaController.index()
-      checkConnetion()  
-    }, []);
+    });   
+    JornadaController.index()
+    checkConnetion()  
+  }, []);
 
-    const renderItem = ({item, index}) => {
-      if(index > 5) return null
-      if(index === 5)
-        return(
-          <View style={styles.column}>
-            <MenuItemMore descricao="OUTROS" icone={images.outros_icon} navigation={props.navigation}/>
-          </View>
-        )
+  const renderItem = ({item, index}) => {
+    if(index > 5) return null
+    if(index === 5)
       return(
         <View style={styles.column}>
-          <MenuItem {...item} navigation={props.navigation}/>
+          <MenuItemMore descricao="OUTROS" icone={images.outros_icon} navigation={props.navigation}/>
         </View>
-      ) 
-    }
+      )
+    return(
+      <View style={styles.column}>
+        <MenuItem {...item} navigation={props.navigation}/>
+      </View>
+    ) 
+  }
 
-    async function checkConnetion(){
-      try{
-        const is_connected = await ConnectionController.isConnected()
-        if(!is_connected){
-          Toast.show({
-            text: 'Você esta usando o APP sem conexão com a internet.',
-            type: 'warning',
-            buttonText: 'ok'
-          })
-        }
+  async function checkConnetion(){
+    try{
+      const is_connected = await ConnectionController.isConnected()
+      if(!is_connected){
+        Toast.show({
+          text: 'Você esta usando o APP sem conexão com a internet.',
+          type: 'warning',
+          buttonText: 'ok'
+        })
       }
-      catch(err){
-        console.log(err)
-      }
-    } 
-
-
-    const backPress = () => {
-      BackHandler.exitApp()
-      return true;
     }
+    catch(err){
+      console.log(err)
+    }
+  } 
 
-    const keyExtractor = (item) =>  'jornada_menu_item' + item.id;
+  const backPress = () => {
+    BackHandler.exitApp()
+    return true;
+  }
 
-    console.log(props.jornada)
+  const keyExtractor = (item) =>  {
+    const key = 'jornada_menu_item_' + item.id;
+    console.log("Key for item:", key);
+    return key;
+  };
 
-    return (
-      <Container>
-        <CustomHeader title="JORNADA" navigation={props}/>
-        <FlatList
-          style={styles.root}
-          data={!isEmpty(props.jornada) && !isEmpty(props.jornada.menu) ? props.jornada.menu : []}
-          keyExtractor={keyExtractor}
-          numColumns={2}
-          renderItem={renderItem} 
-        />
-      </Container>
-    );
-  
+  console.log(props.jornada)
+
+  return (
+    <Container>
+      <CustomHeader title="JORNADA" navigation={props}/>
+      <FlatList
+        style={styles.root}
+        data={!isEmpty(props.jornada) && !isEmpty(props.jornada.menu) ? props.jornada.menu : []}
+        keyExtractor={keyExtractor}
+        numColumns={2}
+        renderItem={renderItem} 
+      />
+    </Container>
+  );
+
 }
 
 const mapStateToProps = store => ({
   jornada: store.jornada.jornada
 });  
 
-
 export default connect(mapStateToProps)(JornadaMenu);
-

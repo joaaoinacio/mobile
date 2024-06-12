@@ -36,7 +36,10 @@ axios.interceptors.response.use(function (response) {
 })
 
 axios.defaults.headers.common = {
-  Authorization: AuthController.getAuthorization()
+  Authorization: AuthController.getAuthorization(), 
+  'Content-Type': 'application/x-www-form-urlencoded'
+
 }
+axios.defaults.withCredentials=false;
 
 export default axios

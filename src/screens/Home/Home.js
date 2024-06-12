@@ -17,6 +17,7 @@ function Home(props) {
   const [token, hasToken] = React.useState(false);
 
   React.useEffect(() => {
+    console.log(AuthController)
     AuthController.isLogged()
       .then(res => {
         if (!res) {

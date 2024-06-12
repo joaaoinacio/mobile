@@ -1,6 +1,6 @@
 import { Toast } from 'native-base';
 import NavigationService from '../NavigationService';
-import AuthController from '../controllers/AuthController';
+// import AuthController from '../controllers/AuthController';
 import ConnectionController from '../controllers/ConnectionController';
 
 const errors = [

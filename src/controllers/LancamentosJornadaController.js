@@ -131,7 +131,7 @@ export default class LancamentosJornadaController {
       }
 
       Date.prototype.toJSON = function () {
-        return moment(this).format();
+        return moment(this).format().utc(true);
       };
 
       const axios_config = await AuthController.getHeaders();

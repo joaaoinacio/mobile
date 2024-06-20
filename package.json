@@ -29,6 +29,7 @@
     "native-base": "2.15.2",
     "patch-package": "^8.0.0",
     "postinstall-postinstall": "^2.1.0",
+    "prop-types": "^15.8.1",
     "react": "18.2.0",
     "react-native": "0.73.0",
     "react-native-android-location-enabler": "^2.0.1",

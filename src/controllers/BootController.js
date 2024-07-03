@@ -1,3 +1,6 @@
+/* eslint-disable prettier/prettier */
+/* eslint-disable react-native/no-inline-styles */
+/* eslint-disable prettier/prettier */
 import PermissionController from './PermissionController';
 import JornadaController from './JornadaController';
 import GeolocationController from './GeolocationController';
@@ -144,21 +147,12 @@ class BootController {
 
         const user = await AuthController.getUser();
 
+        await Database.open('JornadasTipo');
         const apiDataJornadaTipo = await http.get(
           Routes.api + '/tipo-jornada?id=' + user.empresa.id,
         );
-        await Database.deleteAll();
         const JornadasTipoDBData = await Database.store(
           apiDataJornadaTipo && apiDataJornadaTipo.data,
-        );
-
-        const apiDataVeiculos = await http.get(
-          Routes.api + '/veiculos?empresa_id=' + user.empresa.id,
-        );
-        console.log(apiDataVeiculos);
-        await Database.deleteAll();
-        const VeiculoDBData = await Database.store(
-          apiDataVeiculos && apiDataVeiculos.data,
         );
 
         Store.dispatch(
@@ -166,12 +160,22 @@ class BootController {
             jornadaTipos: JornadasTipoDBData,
           }),
         );
+        await Database.close('JornadasTipo');
+        await Database.open('Veiculo');
+        const apiDataVeiculos = await http.get(
+          Routes.api + '/veiculos?empresa_id=' + user.empresa.id,
+        );
+
+        const VeiculoDBData = await Database.store(
+          apiDataVeiculos && apiDataVeiculos.data,
+        );
 
         Store.dispatch(
           setVeiculos({
             veiculos: VeiculoDBData,
           }),
         );
+        await Database.close('Veiculo');
       }
 
       const init = await AuthController.getInitConfg();
